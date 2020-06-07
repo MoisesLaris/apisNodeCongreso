@@ -4,9 +4,15 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var userSquema = Schema({
-    folio: Number,
+    idUsuario: Number,
     nombre: String,
-    apellidos: String
+    apellidos: String,
+    tipoUsuario: Number,
+    correo: String,
+    password: String,
+    semestre: Number,
+    grupo: String
+
 });
 
 module.exports = mongoose.model('User', userSquema);

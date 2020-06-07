@@ -7,6 +7,7 @@ var app = express();
 
 //Cargar rutas
 
+var user_routes = require('./routes/user');
 
 //Cargar middlewares
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -15,18 +16,8 @@ app.use(bodyParser.json());
 //Cors
 
 //Rutas
+app.use('/api', user_routes);
 
-app.get('/', (req, res) => {
-    res.status(200).send({
-        message: "Pruebas en nodeJs",
-    });
-});
-app.post('/pruebas', (req, res) => {
-    console.log(req.body);
-    res.status(200).send({
-        message: "Pruebas en nodeJs -> post",
-    });
-});
 
 //Exportar
 
