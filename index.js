@@ -8,7 +8,7 @@ var port = 3800;
 mongoose.Promise = global.Promise;
 mongoose.connect('mongodb://localhost:27017/AutoInc', { useMongoClient: true })
     .then(() => {
-        console.log('Conexión exitosa!');
+        console.log('Conexión exitosa! Gracias al moisi precioso');
 
         //Crear servidor
         app.listen(port, () => {
