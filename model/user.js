@@ -14,4 +14,4 @@ var userSquema = Schema({
     grupo: String
 });
 
-module.exports = mongoose.model('User', userSquema);
+module.exports = mongoose.model('User', userSquema, "usuario");
