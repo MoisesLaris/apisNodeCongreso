@@ -12,7 +12,6 @@ var userSquema = Schema({
     password: String,
     semestre: Number,
     grupo: String
-
 });
 
 module.exports = mongoose.model('User', userSquema);

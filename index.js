@@ -6,7 +6,7 @@ var port = 3800;
 
 
 mongoose.Promise = global.Promise;
-mongoose.connect('mongodb://localhost:27017/AutoInc', { useMongoClient: true })
+mongoose.connect('mongodb://localhost:27017/congreso', { useMongoClient: true })
     .then(() => {
         console.log('Conexión exitosa! Gracias al moisi precioso');
 

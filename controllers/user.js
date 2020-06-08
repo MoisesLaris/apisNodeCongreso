@@ -1,5 +1,6 @@
 'use strict'
 
+var mongoose = require('mongoose');
 var User = require('../model/user');
 //encriptar contraseña
 var bcrypt = require('bcrypt-nodejs');
@@ -18,7 +19,7 @@ function pruebas(req, res) {
 }
 
 function newUser(req, res) {
-    var params = req.body;//Toma todos los campos que llegan por req en body, y los pone en params
+    var params = req.body; //Toma todos los campos que llegan por req en body, y los pone en params
     var user = new User();
     if (params.nombre && params.apellidos && params.tipoUsuario && params.correo && params.password && params.semestre && params.grupo) {
         //Seguir con el video jeje
@@ -29,28 +30,25 @@ function newUser(req, res) {
         user.correo = params.correo;
         user.semestre = params.semestre;
         user.grupo = params.grupo;
-        
-        bcrypt.hash(params.password,null,null,(err, hash) => {
+
+        bcrypt.hash(params.password, null, null, (err, hash) => {
             user.password = hash;
 
             user.save((err, userStored) => {
-                if(err)
-                {
-                    return res.status(500).send({message:'Error al insertar el usuario '+ err})
-                } 
-                if(userStored){
-                    res.status(200).send({user: userStored});
-                }else{
-                    res.status(404).send({message:'No se ha registrado el usuario'});
+                if (err) {
+                    return res.status(500).send({ message: 'Error al insertar el usuario ' + err })
+                }
+                if (userStored) {
+                    res.status(200).send({ user: userStored });
+                } else {
+                    res.status(404).send({ message: 'No se ha registrado el usuario' });
                 }
             });
             //res.status(200).send({message:'Simon ' + valor.toString});
         });
-    }
-    else
-    {
+    } else {
         res.status(200).send({
-            message:"Hubo un problema al recibir los datos."
+            message: "Hubo un problema al recibir los datos."
         });
     }
 }
