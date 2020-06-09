@@ -9,4 +9,4 @@ var CarreraSchema = Schema({
     centro: String
 });
 
-module.exports = mongoose.model('Carrera',CarreraSchema);
+module.exports = mongoose.model('Carrera',CarreraSchema,'carrera');

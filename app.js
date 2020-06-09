@@ -8,6 +8,7 @@ var app = express();
 //Cargar rutas
 
 var user_routes = require('./routes/user');
+var congreso_routes = require('./routes/congreso');
 
 //Cargar middlewares
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -17,7 +18,7 @@ app.use(bodyParser.json());
 
 //Rutas
 app.use('/api', user_routes);
-
+app.use('/api', congreso_routes);
 
 //Exportar
 

@@ -2,36 +2,28 @@
 
 var mongoose = require('mongoose');
 
-var Congreso = require('../model/congreso');
+var Carrera = require('../model/carrera');
 //encriptar contraseña
 
-function newCongreso(req, res) {
+function newCarrera(req, res) {
     var params = req.body; //Toma todos los campos que llegan por req en body, y los pone en params
-    var congreso = new Congreso();
-    if (params.nombre && params.idCarrera) {
+    var carrera = new Carrera();
+    if (params.nombre && params.centro) {
 
-        congreso.nombre = params.nombre;
-        congreso.idCarrera = params.idCarrera;
+        carrera.nombre = params.nombre;
+        carrera.centro = params.centro;
 
-        Congreso.find({}).sort({ $natural: -1 }).exec(function(err, doc) {
+        Carrera.find({}).sort({ $natural: -1 }).exec(function(err, doc) {
             if (err) {
                 res.status(404).send({ message: 'No se ha registrado el usuario' });
             }
-            /*if(doc.isNaN)
-            {
-                var x = 1;
-            }
-            else
-            {
-                var x = doc[0].idCongreso + 1;
-            }*/
-            congreso.idCongreso = 0;
-            congreso.save((err, congresoStored) => {
+            carrera.idCarrera = 0;
+            carrera.save((err, carreraStored) => {
                 if (err) {
                     return res.status(500).send({ message: 'Error al insertar el congreso ' + err })
                 }
-                if (congresoStored) {
-                    res.status(200).send({ congreso : congresoStored });
+                if (carreraStored) {
+                    res.status(200).send({ carrera : carreraStored });
                 } else {
                     res.status(404).send({ message: 'No se ha registrado el congreso' });
                 }
@@ -45,5 +37,5 @@ function newCongreso(req, res) {
 }
 
 module.exports = {
-    newCongreso
+    newCarrera
 }
