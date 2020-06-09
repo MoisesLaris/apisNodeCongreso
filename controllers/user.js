@@ -2,6 +2,7 @@
 
 var mongoose = require('mongoose');
 var User = require('../model/user');
+var mongoosePaginate = require('mongoose-pagination');
 //encriptar contraseña
 var bcrypt = require('bcrypt-nodejs');
 
@@ -143,10 +144,82 @@ function getUser(req, res)
     });
 }
 
+//Consultar usuarios por paginas
+function getUsers(req, res)
+{
+    var identity_user_id = req.user.sub;
+
+    var page = 1;
+
+    if(req.params.page){
+        page = req.params.page;
+    }
+
+    var itemsPerPage = 5;
+
+    User.find().sort('_id').paginate(page,itemsPerPage,(err,users,total) => {
+        if(err) return res.status(500).send({message:'Error en la peticion'});
+
+        if(!users) return res.status(404).send({message:'No hay usuarios disponibles'});
+
+        return res.status(200).send({
+            users,
+            total,
+            pages: Math.ceil(total/itemsPerPage),
+        });
+    });
+
+}
+
+//Actualizar usuario
+function updateUser(req,res)
+{
+    var userId = req.params.id;
+    var update = req.body;
+
+    //borrar propiedad password
+    delete update.password;
+
+    if(userId != req.user.sub)
+    {
+        return res.status(200).send({message: 'No tienes permisos para esto'});
+    }
+
+    User.findByIdAndUpdate(userId,update,{new:true},(err, userUpdated) => {
+        if(err) return res.status(500).send({message:'Error en la peticion'});
+
+        if(!userUpdated) return res.status(404).send({message:'No se ha podido actualizar'});
+
+        return res.status(200).send({
+            user: userUpdated,
+        })
+    });
+}
+
+//Borrar usuario
+function deleteUser(req,res)
+{
+    var tipoUsuario = req.user.tipoUsuario;
+    var usuario = req.user.sub;
+
+    /*if(tipoUsuario != 0)
+    {
+        return res.status(200).send({message:'No tienes permisos para esto'});
+    }*/
+
+    User.findById(usuario).remove(err => {
+        if(err) return res.status(500).send({message: 'Error al eliminar usuario'});
+
+        return res.status(200).send({message:'Usuario Eliminado'});
+    });
+}
 module.exports = {
     home,
     pruebas,
     newUser,
     loginUser,
-    getUser
+    getUser,
+    getUsers,
+    updateUser,
+    deleteUser
 }
