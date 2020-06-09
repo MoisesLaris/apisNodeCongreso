@@ -4,27 +4,25 @@ var jwt = require('jwt-simple');
 var moment = require('moment');
 var secret = 'moisy_el_precioso';
 
-exports.ensureAuth = function(req,res,next)
-{
-    if(!req.headers.authorization)
+exports.ensureAuth = function(req, res, next) {
+    if (!req.headers.authorization) //Headers Angular
     {
-        return res.status(403).send({message:'La peticion no tiene la cabecera de autenticacion'});
+        return res.status(403).send({ message: 'La peticion no tiene la cabecera de autenticacion' });
     }
 
-    var token = req.headers.authorization.replace(/['"]+/g,'');
+    var token = req.headers.authorization.replace(/['"]+/g, '');
 
-    try{
-        var payload = jwt.decode(token,secret);
+    try {
+        var payload = jwt.decode(token, secret);
 
-        if(payload.exp <= moment().unix()){
+        if (payload.exp <= moment().unix()) {
             return res.status(401).send({
-                message:'El token ha expirado'
+                message: 'El token ha expirado'
             });
         }
-    }
-    catch(ex){
+    } catch (ex) {
         return res.status(404).send({
-            message:'El token no es valido'
+            message: 'El token no es valido'
         });
     }
 

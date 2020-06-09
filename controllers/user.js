@@ -98,17 +98,12 @@ function loginUser(req, res) {
             bcrypt.compare(password, user.password, (err, check) => {
                 if (check) {
                     //Devolver datos de usuario
-                    if (params.getToken) {
-                        //Devolver token
-                        //generar token
-                        return res.status(200).send({
-                            token: jwt.createToken(user)
-                        });
-                    } else {
-                        //devolver datos de usuario
-                    }
-                    user.password = undefined;
-                    return res.status(200).send({ user });
+                    //Devolver token
+                    //generar token
+                    return res.status(200).send({
+                        token: jwt.createToken(user)
+                    });
+
                 } else {
                     return res.status(404).send({ message: 'El usuario no se ha podido identificar' });
                 }
