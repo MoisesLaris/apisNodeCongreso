@@ -39,28 +39,29 @@ function newUser(req, res) {
 
         //Controlar los usuarios repetidos por correo
         User.findOne({ correo: user.correo.toLowerCase() }).exec((err, users) => {
-            if (err) return res.status(500).send({ message: 'Error en peticion usuario ' + err })
+            if (err) return res.status(500).send({ message: 'Error en peticion usuario ' + err,success: false })
             if (users) {
                 return res.status(200).send({
-                    message: "El correo ya esta siendo usado por otro usuario."
+                    message: "El correo ya esta siendo usado por otro usuario.",
+                    success: false
                 });
             } else {
                 bcrypt.hash(params.password, null, null, (err, hash) => {
                     user.password = hash;
                     User.find({}).sort({ $natural: -1 }).exec(function(err, doc) {
                         if (err) {
-                            res.status(404).send({ message: 'No se ha registrado el usuario' });
+                            res.status(404).send({ message: 'No se ha registrado el usuario',success: false });
                         }
                         var x = doc[0].idUsuario + 1;
                         user.idUsuario = x;
                         user.save((err, userStored) => {
                             if (err) {
-                                return res.status(500).send({ message: 'Error al insertar el usuario ' + err })
+                                return res.status(500).send({ message: 'Error al insertar el usuario ' + err ,success: false })
                             }
                             if (userStored) {
-                                res.status(200).send({ user: userStored });
+                                res.status(200).send({ message: "Se creo el usuario correctamente",success: true });
                             } else {
-                                res.status(404).send({ message: 'No se ha registrado el usuario' });
+                                res.status(404).send({ message: 'No se ha registrado el usuario' ,success: false});
                             }
                         });
                     });
@@ -85,11 +86,6 @@ function loginUser(req, res) {
     var email = params.correo;
     var password = params.password;
 
-    /*if(params.correo && params.password)
-    {
-        return res.status(200).send({message: 'Recibi esto '+params.correo + ' ' + params.password});
-    }*/
-
     User.findOne({ correo: email }, (err, user) => {
         if (err) return res.status(500).send({ message: 'Error en la peticion' });
         //return res.status(200).send({message: 'Recibi esto '+params.correo + ' ' + params.password});
@@ -97,19 +93,19 @@ function loginUser(req, res) {
 
             bcrypt.compare(password, user.password, (err, check) => {
                 if (check) {
-                    //Devolver datos de usuario
-                    //Devolver token
-                    //generar token
                     return res.status(200).send({
-                        token: jwt.createToken(user)
+                        token: jwt.createToken(user),
+                        success: true,
+                        tipoUsuario: user.tipoUsuario,
+                        message: "Se inicio sesion correctamente",
                     });
 
                 } else {
-                    return res.status(404).send({ message: 'El usuario no se ha podido identificar' });
+                    return res.status(404).send({ message: 'Correo o contraseña incorrecta' ,success: false});
                 }
             });
         } else {
-            return res.status(404).send({ message: 'El usuario no existe' });
+            return res.status(404).send({ message: 'El usuario no existe',success: false });
         }
     });
 }
@@ -162,17 +158,18 @@ function updateUser(req, res) {
     delete update.password;
 
     if (userId != req.user.sub) {
-        return res.status(200).send({ message: 'No tienes permisos para esto' });
+        return res.status(200).send({ message: 'No tienes permisos para esto',success: false });
     }
 
     User.findByIdAndUpdate(userId, update, { new: true }, (err, userUpdated) => {
-        if (err) return res.status(500).send({ message: 'Error en la peticion' });
+        if (err) return res.status(500).send({ message: 'Error en la peticion' ,success: false});
 
-        if (!userUpdated) return res.status(404).send({ message: 'No se ha podido actualizar' });
+        if (!userUpdated) return res.status(404).send({ message: 'No se ha podido actualizar' ,success: false });
 
         return res.status(200).send({
-            user: userUpdated,
-        })
+            message: "Se edito el usuario correctamente",
+            success: true
+        });
     });
 }
 
@@ -181,15 +178,15 @@ function deleteUser(req, res) {
     var tipoUsuario = req.user.tipoUsuario;
     var usuario = req.user.sub;
 
-    /*if(tipoUsuario != 0)
+    if(tipoUsuario != 0)
     {
-        return res.status(200).send({message:'No tienes permisos para esto'});
-    }*/
+        return res.status(200).send({message:'No tienes permisos para esto',success: false});
+    }
 
     User.findById(usuario).remove(err => {
-        if (err) return res.status(500).send({ message: 'Error al eliminar usuario' });
+        if (err) return res.status(500).send({ message: 'Error al eliminar usuario',success: false });
 
-        return res.status(200).send({ message: 'Usuario Eliminado' });
+        return res.status(200).send({ message: 'Usuario Eliminado',success: true });
     });
 }
 module.exports = {
