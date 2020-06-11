@@ -14,18 +14,10 @@ function newCongreso(req, res) {
         congreso.nombre = params.nombre;
         congreso.idCarrera = params.idCarrera;
 
-        Congreso.find({}).sort({ $natural: -1 }).exec(function(err, doc) {
+        Congreso.find({nombre:congreso.nombre}).sort({ $natural: -1 }).exec(function(err, doc) {
             if (err) {
                 res.status(404).send({ message: 'No se ha registrado el usuario' });
             }
-            /*if(doc.isNaN)
-            {
-                var x = 1;
-            }
-            else
-            {
-                var x = doc[0].idCongreso + 1;
-            }*/
             congreso.idCongreso = 0;
             congreso.save((err, congresoStored) => {
                 if (err) {

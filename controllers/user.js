@@ -203,9 +203,9 @@ function getUserByToken(req,res)
     var userReturn = req.user;
     userReturn.password = undefined;
     return res.status(200).send({
-        token: jwt.createToken(user),
+        token: req.headers.authorization,
         success: true,
-        tipoUsuario: user.tipoUsuario,
+        tipoUsuario: userReturn.tipoUsuario,
         message: "Informacion de usuario",
         user: userReturn
     });
