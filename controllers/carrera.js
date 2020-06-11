@@ -15,17 +15,17 @@ function newCarrera(req, res) {
 
         Carrera.find({}).sort({ $natural: -1 }).exec(function(err, doc) {
             if (err) {
-                res.status(404).send({ message: 'No se ha registrado el usuario' });
+                res.status(404).send({ message: 'No se ha registrado la carrera' });
             }
             carrera.idCarrera = 0;
             carrera.save((err, carreraStored) => {
                 if (err) {
-                    return res.status(500).send({ message: 'Error al insertar el congreso ' + err })
+                    return res.status(500).send({ message: 'Error al insertar la carrera ' + err })
                 }
                 if (carreraStored) {
                     res.status(200).send({ carrera : carreraStored });
                 } else {
-                    res.status(404).send({ message: 'No se ha registrado el congreso' });
+                    res.status(404).send({ message: 'No se ha registrado la carrera' });
                 }
             });
         });
