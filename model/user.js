@@ -11,7 +11,8 @@ var userSquema = Schema({
     correo: String,
     password: String,
     semestre: Number,
-    grupo: String
+    grupo: String,
+    idCarrera: { type: Schema.ObjectId, ref: 'Carrera'}
 });
 
 module.exports = mongoose.model('User', userSquema, "usuario");
