@@ -5,6 +5,7 @@ var mongoose = require('mongoose');
 var Congreso = require('../model/congreso');
 //encriptar contraseña
 
+//Nuevo Congreso
 function newCongreso(req, res) {
     var params = req.body; //Toma todos los campos que llegan por req en body, y los pone en params
     var congreso = new Congreso();
