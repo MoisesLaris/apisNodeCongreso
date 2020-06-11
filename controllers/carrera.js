@@ -80,23 +80,52 @@ function getCarrera(req,res) {
         return res.status(200).send({ carrera });
     });
 }
-
 //Borrar Carrera
-function deleteCarrera(req, res) {
-    var carrera = req.carrera.sub;
+async function deleteCarrera(req, res) {
+    var carreraId = req.params.id;
 
-    var congresos = Congreso.find({idCarrera:carrea}).count();
+    //return res.status(200).send({message:"carreraId " + carreraId,success:true});
+
+    //Congreso.find({idCarrera:carreraId}).populate({path:''})
+
+    /*Congreso.find({idCarrera:carreraId}).exec((err,count) => {
+        if(err) return res.sttus(200).send({message:"Error al busca congresos",success:false});
+        if(count)
+        {
+            return res.status(200).send({message:"Congresos",count});
+        }
+    });
+    */
+   var congresos = await getCongresos(carreraId);
+        /*Congreso.countDocuments({idCarrera: carreraId}, function(err, c) {
+            console.log('Count is ' + c);
+            congresos = c;
+            console.log('congresos -> ' + congresos);
+        });*/
 
     if(congresos >= 1)
     {
         return res.status(200).send({message:"No se puede borrar la carrera, por que tiene congresos asignados",success:false});
     }
 
-    Carrera.findById(carrera).remove(err => {
+    //console.log(congresos);
+    //return res.status(200).send({message:"Congresos encontrados " + congresos,success:true});
+
+    Carrera.findById(carreraId).remove(err => {
         if (err) return res.status(500).send({ message: 'Error al eliminar usuario', success: false });
 
         return res.status(200).send({ message: 'Carrera Eliminada', success: true });
     });
+}
+
+async function getCongresos(carreraId)
+{
+    var congresos = await Congreso.countDocuments({idCarrera: carreraId}, function(err, c) {
+        if(err) return handleError(err);        
+        console.log('Count is ' + c);
+        return c;
+    });
+    return congresos;
 }
 
 

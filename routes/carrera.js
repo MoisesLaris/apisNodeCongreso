@@ -9,6 +9,6 @@ api.post('/newCarrera',carreraController.newCarrera);
 api.get('/getCarreras',carreraController.getCarreras);
 api.get('/getCarrera/:id',carreraController.getCarrera);
 api.put('/updateCarrera/:id',carreraController.updateCarrera);
-api.put('/deletecarrera/:id',carreraController.deleteCarrera);
+api.post('/deletecarrera/:id',carreraController.deleteCarrera);
 
 module.exports = api;
