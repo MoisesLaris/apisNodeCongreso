@@ -10,6 +10,7 @@ var app = express();
 var user_routes = require('./routes/user');
 var congreso_routes = require('./routes/congreso');
 var FAQ_routes = require('./routes/FAQ');
+var carrera_routes = require('./routes/carrera');
 
 //Cargar middlewares
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -21,6 +22,7 @@ app.use(bodyParser.json());
 app.use('/api', user_routes);
 app.use('/api', congreso_routes);
 app.use('/api', congreso_routes);
+app.use('/api', carrera_routes);
 
 //Exportar
 

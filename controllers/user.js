@@ -92,7 +92,7 @@ function loginUser(req, res) {
     var password = params.password;
 
     User.findOne({ correo: email }, (err, user) => {
-        if (err) return res.status(500).send({ message: 'Error en la peticion' });
+        if (err) return res.status(500).send({ message: 'Error en la peticion' ,success:false});
         //return res.status(200).send({message: 'Recibi esto '+params.correo + ' ' + params.password});
         if (user) {
 
@@ -125,9 +125,9 @@ function getUser(req, res) {
     var userId = req.params.id;
 
     User.findById(userId, (err, user) => {
-        if (err) return res.status(500).send({ message: 'Error en la peticion' });
+        if (err) return res.status(500).send({ message: 'Error en la peticion' ,success:false});
 
-        if (!user) return res.status(404).send({ message: 'El usuario no existe' });
+        if (!user) return res.status(404).send({ message: 'El usuario no existe' ,success:false});
 
         return res.status(200).send({ user });
     });
@@ -146,13 +146,12 @@ function getUsers(req, res) {
     var itemsPerPage = 5;
 
     User.find((err, users, total) => {
-        if (err) return res.status(500).send({ message: 'Error en la peticion' });
+        if (err) return res.status(500).send({ message: 'Error en la peticion' ,success:false});
 
-        if (!users) return res.status(404).send({ message: 'No hay usuarios disponibles' });
+        if (!users) return res.status(404).send({ message: 'No hay usuarios disponibles' ,success:false});
 
         return res.status(200).send({
-            users,
-            total
+            users
         });
     }).sort('_id');
 
@@ -173,7 +172,7 @@ function updateUser(req, res) {
     User.findByIdAndUpdate(userId, update, { new: true }, (err, userUpdated) => {
         if (err) return res.status(500).send({ message: 'Error en la peticion', success: false });
 
-        if (!userUpdated) return res.status(404).send({ message: 'No se ha podido actualizar', success: false });
+        if (!userUpdated) return res.status(200).send({ message: 'No se ha podido actualizar', success: false });
 
         return res.status(200).send({
             message: "Se edito el usuario correctamente",
