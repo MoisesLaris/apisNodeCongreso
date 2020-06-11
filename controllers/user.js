@@ -8,6 +8,8 @@ var bcrypt = require('bcrypt-nodejs');
 
 var jwt = require('../services/jwt');
 
+var md_auth = require('../middleware/authenticated');
+
 //Metodo de prueba
 function home(req, res) {
     res.status(200).send({
@@ -39,7 +41,7 @@ function newUser(req, res) {
 
         //Controlar los usuarios repetidos por correo
         User.findOne({ correo: user.correo.toLowerCase() }).exec((err, users) => {
-            if (err) return res.status(500).send({})
+            if (err) return res.status(500).send({message:"Error en la busqueda", success:false})
             if (users) {
                 return res.status(200).send({
                     message: "El correo ya esta siendo usado por otro usuario.",
@@ -47,7 +49,7 @@ function newUser(req, res) {
                 });
             } else {
                 bcrypt.hash(params.password, null, null, (err, hash) => {
-                    if (err) return res.status(500).send({})
+                    if (err) return res.status(500).send({message:"Error al encryptar la contraseña",success:false})
                     user.password = hash;
                     User.find({}).sort({ $natural: -1 }).exec(function(err, doc) {
                         if (err) {
@@ -95,13 +97,16 @@ function loginUser(req, res) {
 
             bcrypt.compare(password, user.password, (err, check) => {
                 if (err) return res.status(200).send({ message: 'Correo o contraseña incorrecta', success: false });
-                console.log(user);
+                //console.log(user);
                 if (check) {
+                    var userReturn = user;
+                    userReturn.password = undefined;
                     return res.status(200).send({
                         token: jwt.createToken(user),
                         success: true,
                         tipoUsuario: user.tipoUsuario,
                         message: "Se inicio sesion correctamente",
+                        user: userReturn
                     });
 
                 } else {
@@ -192,6 +197,20 @@ function deleteUser(req, res) {
         return res.status(200).send({ message: 'Usuario Eliminado', success: true });
     });
 }
+
+function getUserByToken(req,res)
+{
+    var userReturn = req.user;
+    userReturn.password = undefined;
+    return res.status(200).send({
+        token: jwt.createToken(user),
+        success: true,
+        tipoUsuario: user.tipoUsuario,
+        message: "Informacion de usuario",
+        user: userReturn
+    });
+}
+
 module.exports = {
     home,
     pruebas,
@@ -200,5 +219,6 @@ module.exports = {
     getUser,
     getUsers,
     updateUser,
-    deleteUser
+    deleteUser,
+    getUserByToken
 }
