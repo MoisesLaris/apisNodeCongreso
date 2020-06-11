@@ -165,7 +165,7 @@ function updateUser(req, res) {
     //borrar propiedad password
     delete update.password;
 
-    if (userId != req.user.sub || req.user.tipoUsuario == 0) {
+    if (userId != req.user.sub || req.user.tipoUsuario != 0) {
         return res.status(200).send({ message: 'No tienes permisos para esto', success: false });
     }
 
