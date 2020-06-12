@@ -184,14 +184,16 @@ function updateUser(req, res) {
 //Borrar usuario
 function deleteUser(req, res) {
     var tipoUsuario = req.user.tipoUsuario;
-    var usuario = req.user.sub;
+    //var usuario = req.user.sub;
+
+    var usuario = req.params.id;
 
     if (tipoUsuario != 0) {
         return res.status(200).send({ message: 'No tienes permisos para esto', success: false });
     }
 
     User.deleteOne(usuario,err => {
-        if (err) return res.status(500).send({ message: 'Error al eliminar usuario', success: false });
+        if (err) return res.status(200).send({ message: 'Error al eliminar usuario', success: false });
 
         return res.status(200).send({ message: 'Usuario Eliminado', success: true });
     });
