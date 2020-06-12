@@ -112,7 +112,7 @@ async function deleteCarrera(req, res) {
     //return res.status(200).send({message:"Congresos encontrados " + congresos,success:true});
 
     Carrera.findById(carreraId).remove(err => {
-        if (err) return res.status(500).send({ message: 'Error al eliminar usuario', success: false });
+        if (err) return res.status(500).send({ message: 'Error al eliminar la carrera', success: false });
 
         return res.status(200).send({ message: 'Carrera Eliminada', success: true });
     });
@@ -121,7 +121,7 @@ async function deleteCarrera(req, res) {
 async function getCongresos(carreraId)
 {
     var congresos = await Congreso.countDocuments({idCarrera: carreraId}, function(err, c) {
-        if(err) return handleError(err);        
+        if(err) return handleError(err);
         console.log('Count is ' + c);
         return c;
     });

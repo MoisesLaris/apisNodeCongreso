@@ -48,54 +48,63 @@ function newFAQ(req, res) {
 }
 
 //Consultar usuarios
-function getUser(req, res) {
-    var userId = req.params.id;
+function getFaq(req, res) {
+    var faqId = req.params.id;
 
-    User.findById(userId, (err, user) => {
+    FAQ.findById(faqId, (err, faq) => {
         if (err) return res.status(500).send({ message: 'Error en la peticion' });
 
-        if (!user) return res.status(404).send({ message: 'El usuario no existe' });
+        if (!faq) return res.status(404).send({ message: 'La pregunta no existe' });
 
-        return res.status(200).send({ user });
+        return res.status(200).send({ faq });
     });
 }
 
 //Consultar usuarios por paginas
-function getUsers(req, res) {
-    var identity_user_id = req.user.sub;
+function getFaqs(req, res) {
 
-    var page = 1;
+    FAQ.find((err, faqs, total) => {
+        if (err) return res.status(500).send({ message: 'Error en la peticion' ,success:false});
 
-    if (req.params.page) {
-        page = req.params.page;
-    }
-
-    var itemsPerPage = 5;
-
-    User.find().sort('_id').paginate(page, itemsPerPage, (err, users, total) => {
-        if (err) return res.status(500).send({ message: 'Error en la peticion' });
-
-        if (!users) return res.status(404).send({ message: 'No hay usuarios disponibles' });
+        if (!faqs) return res.status(404).send({ message: 'No hay preguntas disponibles' ,success:false});
 
         return res.status(200).send({
-            users,
-            total,
-            pages: Math.ceil(total / itemsPerPage),
+            faqs
+        });
+    }).sort('_id');
+
+}
+//updateFaq
+function updateFaq(req, res) {
+    var faqId = req.params.id;
+    var update = req.body;
+
+    if (req.user.tipoUsuario != 0) {
+        return res.status(200).send({ message: 'No tienes permisos para esto', success: false });
+    }
+
+    FAQ.findByIdAndUpdate(faqId, update, { new: true }, (err, faqUpdated) => {
+        if (err) return res.status(500).send({ message: 'Error en la peticion', success: false });
+
+        if (!faqUpdated) return res.status(200).send({ message: 'No se ha podido actualizar', success: false });
+
+        return res.status(200).send({
+            message: "Se edito la pregunta correctamente",
+            success: true
         });
     });
-
 }
 
 //Borrar usuario
-function deleteUser(req, res) {
+function deleteFaq(req, res) {
     var tipoUsuario = req.user.tipoUsuario;
-    var usuario = req.user.sub;
+    var faq = rep.params.id;
 
     if (tipoUsuario != 0) {
         return res.status(200).send({ message: 'No tienes permisos para esto', success: false });
     }
 
-    User.findById(usuario).remove(err => {
+    FAQ.findById(faq).remove(err => {
         if (err) return res.status(500).send({ message: 'Error al eliminar usuario', success: false });
 
         return res.status(200).send({ message: 'Usuario Eliminado', success: true });
@@ -103,5 +112,9 @@ function deleteUser(req, res) {
 }
 
 module.exports = {
-    newFAQ
+    newFAQ,
+    getFaq,
+    getFaqs,
+    updateFaq,
+    deleteFaq
 }
