@@ -29,7 +29,7 @@ function pruebas(req, res) {
 function newUser(req, res) {
     var params = req.body; //Toma todos los campos que llegan por req en body, y los pone en params
     var user = new User();
-    if (params.nombre && params.apellidos && params.correo && params.password && params.semestre && params.grupo && params.idCarrera) {
+    if (params.nombre && params.apellidos && params.correo && params.password && params.semestre && params.grupo) {
         //Seguir con el video jeje
 
         user.nombre = params.nombre;
@@ -38,11 +38,11 @@ function newUser(req, res) {
         user.correo = params.correo.toLowerCase();
         user.semestre = params.semestre;
         user.grupo = params.grupo;
-        user.idCarrera = params.idCarrera;
+        user.idCarrera = null;
 
         //Controlar los usuarios repetidos por correo
         User.findOne({ correo: user.correo.toLowerCase() }).exec((err, users) => {
-            if (err) return res.status(500).send({message:"Error en la busqueda", success:false})
+            if (err) return res.status(500).send({ message: "Error en la busqueda", success: false })
             if (users) {
                 return res.status(200).send({
                     message: "El correo ya esta siendo usado por otro usuario.",
@@ -50,7 +50,7 @@ function newUser(req, res) {
                 });
             } else {
                 bcrypt.hash(params.password, null, null, (err, hash) => {
-                    if (err) return res.status(500).send({message:"Error al encryptar la contraseña",success:false})
+                    if (err) return res.status(500).send({ message: "Error al encryptar la contraseña", success: false })
                     user.password = hash;
                     User.find({}).sort({ $natural: -1 }).exec(function(err, doc) {
                         if (err) {
@@ -92,7 +92,7 @@ function loginUser(req, res) {
     var password = params.password;
 
     User.findOne({ correo: email }, (err, user) => {
-        if (err) return res.status(500).send({ message: 'Error en la peticion' ,success:false});
+        if (err) return res.status(500).send({ message: 'Error en la peticion', success: false });
         //return res.status(200).send({message: 'Recibi esto '+params.correo + ' ' + params.password});
         if (user) {
 
@@ -125,9 +125,9 @@ function getUser(req, res) {
     var userId = req.params.id;
 
     User.findById(userId, (err, user) => {
-        if (err) return res.status(500).send({ message: 'Error en la peticion' ,success:false});
+        if (err) return res.status(500).send({ message: 'Error en la peticion', success: false });
 
-        if (!user) return res.status(404).send({ message: 'El usuario no existe' ,success:false});
+        if (!user) return res.status(404).send({ message: 'El usuario no existe', success: false });
 
         return res.status(200).send({ user });
     });
@@ -146,9 +146,9 @@ function getUsers(req, res) {
     var itemsPerPage = 5;
 
     User.find((err, users, total) => {
-        if (err) return res.status(500).send({ message: 'Error en la peticion' ,success:false});
+        if (err) return res.status(500).send({ message: 'Error en la peticion', success: false });
 
-        if (!users) return res.status(404).send({ message: 'No hay usuarios disponibles' ,success:false});
+        if (!users) return res.status(404).send({ message: 'No hay usuarios disponibles', success: false });
 
         return res.status(200).send({
             users
@@ -197,8 +197,7 @@ function deleteUser(req, res) {
     });
 }
 
-function getUserByToken(req,res)
-{
+function getUserByToken(req, res) {
     var userReturn = req.user;
     userReturn.password = undefined;
     return res.status(200).send({
