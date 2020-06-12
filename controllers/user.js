@@ -190,7 +190,7 @@ function deleteUser(req, res) {
         return res.status(200).send({ message: 'No tienes permisos para esto', success: false });
     }
 
-    User.findById(usuario).deleteOne(err => {
+    User.deleteOne(usuario,err => {
         if (err) return res.status(500).send({ message: 'Error al eliminar usuario', success: false });
 
         return res.status(200).send({ message: 'Usuario Eliminado', success: true });
