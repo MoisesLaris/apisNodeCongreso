@@ -18,17 +18,17 @@ function newActividadUsuarioFecha(req, res) {
 
         ActividadUsuarioFecha.find({idUsuario:actividadUsuarioFecha.idUsuario,idFecha:actividadUsuarioFecha.idFecha,horario:actividadUsuarioFecha.horario}).sort({ $natural: -1 }).exec(function(err, doc) {
             if (err) {
-                res.status(404).send({ message: 'No se ha registrado la actividad' });
+                res.status(200).send({ message: 'No se ha registrado la actividad' });
             }
             actividadUsuarioFecha.idActividadUsuarioFecha = 0;
             actividadUsuarioFecha.save((err, actividadStored) => {
                 if (err) {
-                    return res.status(500).send({ message: 'Error al insertar la actividad ' + err })
+                    return res.status(200).send({ message: 'Error al insertar la actividad ' + err })
                 }
                 if (actividadStored) {
                     res.status(200).send({ actividad : actividadStored });
                 } else {
-                    res.status(404).send({ message: 'No se ha registrado la actividad' });
+                    res.status(200).send({ message: 'No se ha registrado la actividad' });
                 }
             });
         });
@@ -44,7 +44,7 @@ function getActividadUsuarioFecha(req,res) {
     var actividadId = req.params.id;
 
     ActividadUsuarioFecha.findById(actividadId, (err, actividad) => {
-        if (err) return res.status(500).send({ message: 'Error en la peticion' ,success:false});
+        if (err) return res.status(200).send({ message: 'Error en la peticion' ,success:false});
 
         if (!actividad) return res.status(200).send({ message: 'La actividad no existe' ,success:false});
 
@@ -56,7 +56,7 @@ function getActividadUsuarioFecha(req,res) {
 function getActividadesUsuario(req, res){
     var idUsuario = req.params.id;
     ActividadUsuarioFecha.find({idUsuario:idUsuario},(err, actividades) => {
-        if (err) return res.status(500).send({ message: 'Error en la peticion' ,success:false});
+        if (err) return res.status(200).send({ message: 'Error en la peticion' ,success:false});
 
         if (!actividades) return res.status(200).send({ message: 'No hay actividades disponibles' ,success:false});
 
@@ -70,7 +70,7 @@ function getActividadesUsuario(req, res){
 function getActividadesActividad(req, res){
     var idActividad = req.params.id;
     ActividadUsuarioFecha.find({idActividad:idActividad},(err, actividades) => {
-        if (err) return res.status(500).send({ message: 'Error en la peticion' ,success:false});
+        if (err) return res.status(200).send({ message: 'Error en la peticion' ,success:false});
 
         if (!actividades) return res.status(200).send({ message: 'No hay actividades disponibles' ,success:false});
 
@@ -84,7 +84,7 @@ function getActividadesActividad(req, res){
 function getActividadesFecha(req, res){
     var idFecha = req.params.id;
     ActividadUsuarioFecha.find({idFecha:idFecha},(err, actividades) => {
-        if (err) return res.status(500).send({ message: 'Error en la peticion' ,success:false});
+        if (err) return res.status(200).send({ message: 'Error en la peticion' ,success:false});
 
         if (!actividades) return res.status(200).send({ message: 'No hay actividades disponibles' ,success:false});
 
@@ -94,13 +94,26 @@ function getActividadesFecha(req, res){
     }).sort('_id');
 }
 
+function getActividadesUsuarioCero(req,res){
+    var id = req.params.id;
+    ActividadUsuarioFecha.find({idUsuario:0},(err, actividades) => {
+        if(err) return res.status(200).send({message:'Error en la peticion',success:false});
+
+        if(!actividades) return res.status(200).send({message:'No hay actividades disponibles',success:false});
+
+        return res.status(200).send({
+            actividades
+        });
+    });
+}
+
 //Actualizar Actividad
 function updateActividadUsuarioFecha(req,res){
     var actividadId = req.params.id;
     var update = req.body;
 
     ActividadUsuarioFecha.findByIdAndUpdate(actividadId, update, { new: true }, (err, actividadUpdated) => {
-        if (err) return res.status(500).send({ message: 'Error en la peticion', success: false });
+        if (err) return res.status(200).send({ message: 'Error en la peticion', success: false });
 
         if (!actividadUpdated) return res.status(200).send({ message: 'No se ha podido actualizar', success: false });
 
@@ -146,5 +159,6 @@ module.exports = {
     getActividadesUsuario,
     getActividadesFecha,
     updateActividadUsuarioFecha,
-    getActividadUsuarioFecha
+    getActividadUsuarioFecha,
+    getActividadesUsuarioCero
 }

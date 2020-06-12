@@ -22,17 +22,17 @@ function newTipoPago(req, res) {
 
         TipoPago.find({nombre:tipoPago.nombre}).sort({ $natural: -1 }).exec(function(err, doc) {
             if (err) {
-                res.status(404).send({ message: 'No se ha registrado el tipo pago' });
+                res.status(200).send({ message: 'No se ha registrado el tipo pago' });
             }
             tipoPago.idTipoPago = 0;
             tipoPago.save((err, tipoPagoStored) => {
                 if (err) {
-                    return res.status(500).send({ message: 'Error al insertar el tipo pago ' + err })
+                    return res.status(200).send({ message: 'Error al insertar el tipo pago ' + err })
                 }
                 if (tipoPagoStored) {
                     res.status(200).send({ congreso : tipoPagoStored });
                 } else {
-                    res.status(404).send({ message: 'No se ha registrado el tipo pago' });
+                    res.status(200).send({ message: 'No se ha registrado el tipo pago' });
                 }
             });
         });
@@ -48,9 +48,9 @@ function getTipoPago(req,res) {
     var tipoPagoId = req.params.id;
 
     TipoPago.findById(tipoPagoId, (err, tipoPago) => {
-        if (err) return res.status(500).send({ message: 'Error en la peticion' ,success:false});
+        if (err) return res.status(200).send({ message: 'Error en la peticion' ,success:false});
 
-        if (!tipoPago) return res.status(404).send({ message: 'El tipo pago no existe' ,success:false});
+        if (!tipoPago) return res.status(200).send({ message: 'El tipo pago no existe' ,success:false});
 
         return res.status(200).send({ tipoPago });
     });
@@ -59,7 +59,7 @@ function getTipoPago(req,res) {
 //get congresos
 function getTipoPagos(req, res){
     TipoPago.find((err, tipoPagos) => {
-        if (err) return res.status(500).send({ message: 'Error en la peticion' ,success:false});
+        if (err) return res.status(200).send({ message: 'Error en la peticion' ,success:false});
 
         if (!congresos) return res.status(200).send({ message: 'No hay tipos pagos disponibles' ,success:false});
 
@@ -75,7 +75,7 @@ function updateTipoPago(req,res){
     var update = req.body;
 
     TipoPago.findByIdAndUpdate(tipoPagoId, update, { new: true }, (err, tipoPagoUpdated) => {
-        if (err) return res.status(500).send({ message: 'Error en la peticion', success: false });
+        if (err) return res.status(200).send({ message: 'Error en la peticion', success: false });
 
         if (!tipoPagoUpdated) return res.status(200).send({ message: 'No se ha podido actualizar', success: false });
 
@@ -97,8 +97,8 @@ async function deleteTipoPago(req, res) {
         return res.status(200).send({message:"No se puede borrar el congreso, por que tiene pagos asignados",success:false});
     }
 
-    Congreso.findById(congresoId).remove(err => {
-        if (err) return res.status(500).send({ message: 'Error al eliminar el tipo pago', success: false });
+    TipoPago.deleteOne({_id:pagoId},err => {
+        if (err) return res.status(200).send({ message: 'Error al eliminar el tipo pago', success: false });
 
         return res.status(200).send({ message: 'Tipo pago eliminado', success: true });
     });

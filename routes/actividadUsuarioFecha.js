@@ -12,6 +12,7 @@ api.get('/getActividadUF/idUsuario/:id',actividadUFController.getActividadesUsua
 api.get('/getActividadUF/idFecha/:id',actividadUFController.getActividadesFecha);
 api.get('/getActividadUF/idActividad/:id',actividadUFController.getActividadesActividad);
 api.get('/updateActividadUF/:id',actividadUFController.updateActividadUsuarioFecha);
+api.get('/updateActividadUF/idUsuarioCero',actividadUFController.getActividadesUsuarioCero);
 
 
 module.exports = api;

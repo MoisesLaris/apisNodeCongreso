@@ -18,17 +18,17 @@ function newActividad(req, res) {
 
         Actividad.find({nombre:actividad.nombre,idCongreso:actividad.idCongreso}).sort({ $natural: -1 }).exec(function(err, doc) {
             if (err) {
-                res.status(404).send({ message: 'No se ha registrado la actividad' });
+                res.status(200).send({ message: 'No se ha registrado la actividad' });
             }
             actividad.idActividad = 0;
             actividad.save((err, actividadStored) => {
                 if (err) {
-                    return res.status(500).send({ message: 'Error al insertar la actividad ' + err })
+                    return res.status(200).send({ message: 'Error al insertar la actividad ' + err })
                 }
                 if (actividadStored) {
                     res.status(200).send({ actividad : actividadStored });
                 } else {
-                    res.status(404).send({ message: 'No se ha registrado la actividad' });
+                    res.status(200).send({ message: 'No se ha registrado la actividad' });
                 }
             });
         });
@@ -44,7 +44,7 @@ function getActividad(req,res) {
     var actividadId = req.params.id;
 
     Actividad.findById(actividadId, (err, actividad) => {
-        if (err) return res.status(500).send({ message: 'Error en la peticion' ,success:false});
+        if (err) return res.status(200).send({ message: 'Error en la peticion' ,success:false});
 
         if (!actividad) return res.status(200).send({ message: 'La actividad no existe' ,success:false});
 
@@ -56,7 +56,7 @@ function getActividad(req,res) {
 function getActividadesCongreso(req, res){
     var idCongreso = req.params.id;
     Actividades.find({idCongreso:idCongreso},(err, actividades) => {
-        if (err) return res.status(500).send({ message: 'Error en la peticion' ,success:false});
+        if (err) return res.status(200).send({ message: 'Error en la peticion' ,success:false});
 
         if (!actividades) return res.status(200).send({ message: 'No hay actividades disponibles' ,success:false});
 
@@ -72,7 +72,7 @@ function updateActividad(req,res){
     var update = req.body;
 
     Actividad.findByIdAndUpdate(actividadId, update, { new: true }, (err, actividadUpdated) => {
-        if (err) return res.status(500).send({ message: 'Error en la peticion', success: false });
+        if (err) return res.status(200).send({ message: 'Error en la peticion', success: false });
 
         if (!actividadUpdated) return res.status(200).send({ message: 'No se ha podido actualizar', success: false });
 
@@ -94,8 +94,8 @@ async function deleteActividad(req, res) {
         return res.status(200).send({message:"No se puede borrar la actividad, por que tiene actividades asignadas",success:false});
     }
 
-    Actividad.findById(actividadId).remove(err => {
-        if (err) return res.status(500).send({ message: 'Error al eliminar la actividad', success: false });
+    Actividad.deleteOne({_id:actividadId},err => {
+        if (err) return res.status(200).send({ message: 'Error al eliminar la actividad', success: false });
 
         return res.status(200).send({ message: 'Actividad eliminada', success: true });
     });

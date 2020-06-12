@@ -52,9 +52,9 @@ function getFaq(req, res) {
     var faqId = req.params.id;
 
     FAQ.findById(faqId, (err, faq) => {
-        if (err) return res.status(500).send({ message: 'Error en la peticion' });
+        if (err) return res.status(200).send({ message: 'Error en la peticion' });
 
-        if (!faq) return res.status(404).send({ message: 'La pregunta no existe' });
+        if (!faq) return res.status(200).send({ message: 'La pregunta no existe' });
 
         return res.status(200).send({ faq });
     });
@@ -64,9 +64,9 @@ function getFaq(req, res) {
 function getFaqs(req, res) {
 
     FAQ.find((err, faqs, total) => {
-        if (err) return res.status(500).send({ message: 'Error en la peticion' ,success:false});
+        if (err) return res.status(200).send({ message: 'Error en la peticion' ,success:false});
 
-        if (!faqs) return res.status(404).send({ message: 'No hay preguntas disponibles' ,success:false});
+        if (!faqs) return res.status(200).send({ message: 'No hay preguntas disponibles' ,success:false});
 
         return res.status(200).send({
             faqs
@@ -84,7 +84,7 @@ function updateFaq(req, res) {
     }
 
     FAQ.findByIdAndUpdate(faqId, update, { new: true }, (err, faqUpdated) => {
-        if (err) return res.status(500).send({ message: 'Error en la peticion', success: false });
+        if (err) return res.status(200).send({ message: 'Error en la peticion', success: false });
 
         if (!faqUpdated) return res.status(200).send({ message: 'No se ha podido actualizar', success: false });
 
@@ -104,8 +104,8 @@ function deleteFaq(req, res) {
         return res.status(200).send({ message: 'No tienes permisos para esto', success: false });
     }
 
-    FAQ.findById(faq).remove(err => {
-        if (err) return res.status(500).send({ message: 'Error al eliminar usuario', success: false });
+    FAQ.deleteone({_id:faq},err => {
+        if (err) return res.status(200).send({ message: 'Error al eliminar usuario', success: false });
 
         return res.status(200).send({ message: 'Usuario Eliminado', success: true });
     });

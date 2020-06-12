@@ -17,17 +17,17 @@ function newCongreso(req, res) {
 
         Congreso.find({nombre:congreso.nombre}).sort({ $natural: -1 }).exec(function(err, doc) {
             if (err) {
-                res.status(404).send({ message: 'No se ha registrado el congreso' });
+                res.status(200).send({ message: 'No se ha registrado el congreso' });
             }
             congreso.idCongreso = 0;
             congreso.save((err, congresoStored) => {
                 if (err) {
-                    return res.status(500).send({ message: 'Error al insertar el congreso ' + err })
+                    return res.status(200).send({ message: 'Error al insertar el congreso ' + err })
                 }
                 if (congresoStored) {
                     res.status(200).send({ congreso : congresoStored });
                 } else {
-                    res.status(404).send({ message: 'No se ha registrado el congreso' });
+                    res.status(200).send({ message: 'No se ha registrado el congreso' });
                 }
             });
         });
@@ -43,9 +43,9 @@ function getCongreso(req,res) {
     var congresoId = req.params.id;
 
     Congreso.findById(congresoId, (err, congreso) => {
-        if (err) return res.status(500).send({ message: 'Error en la peticion' ,success:false});
+        if (err) return res.status(200).send({ message: 'Error en la peticion' ,success:false});
 
-        if (!congreso) return res.status(404).send({ message: 'El congreso no existe' ,success:false});
+        if (!congreso) return res.status(200).send({ message: 'El congreso no existe' ,success:false});
 
         return res.status(200).send({ congreso });
     });
@@ -54,7 +54,7 @@ function getCongreso(req,res) {
 //get congresos
 function getCongresos(req, res){
     Congreso.find((err, congresos) => {
-        if (err) return res.status(500).send({ message: 'Error en la peticion' ,success:false});
+        if (err) return res.status(200).send({ message: 'Error en la peticion' ,success:false});
 
         if (!congresos) return res.status(200).send({ message: 'No hay congresos disponibles' ,success:false});
 
@@ -70,7 +70,7 @@ function updateCongreso(req,res){
     var update = req.body;
 
     Congreso.findByIdAndUpdate(congresoId, update, { new: true }, (err, congresoUpdated) => {
-        if (err) return res.status(500).send({ message: 'Error en la peticion', success: false });
+        if (err) return res.status(200).send({ message: 'Error en la peticion', success: false });
 
         if (!congresoUpdated) return res.status(200).send({ message: 'No se ha podido actualizar', success: false });
 
@@ -92,8 +92,8 @@ async function deleteCongreso(req, res) {
         return res.status(200).send({message:"No se puede borrar el congreso, por que tiene actividades asignadas",success:false});
     }
 
-    Congreso.findById(congresoId).remove(err => {
-        if (err) return res.status(500).send({ message: 'Error al eliminar el congreso', success: false });
+    Congreso.deleteone({_id:congresoId},err => {
+        if (err) return res.status(200).send({ message: 'Error al eliminar el congreso', success: false });
 
         return res.status(200).send({ message: 'Congreso eliminado', success: true });
     });

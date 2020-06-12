@@ -21,12 +21,12 @@ function newPago(req, res) {
             pago.idPago = 0;
             pago.save((err, pagoStored) => {
                 if (err) {
-                    return res.status(500).send({ message: 'Error al insertar el pago ' + err })
+                    return res.status(200).send({ message: 'Error al insertar el pago ' + err })
                 }
                 if (pagoStored) {
                     res.status(200).send({ actividad : actividadStored });
                 } else {
-                    res.status(404).send({ message: 'No se ha registrado el pago' });
+                    res.status(200).send({ message: 'No se ha registrado el pago' });
                 }
             });
     } else {
@@ -41,7 +41,7 @@ function getPago(req,res) {
     var pagoId = req.params.id;
 
     Pago.findById(pagoId, (err, pago) => {
-        if (err) return res.status(500).send({ message: 'Error en la peticion' ,success:false});
+        if (err) return res.status(200).send({ message: 'Error en la peticion' ,success:false});
 
         if (!pago) return res.status(200).send({ message: 'El pago no existe' ,success:false});
 
@@ -53,7 +53,7 @@ function getPago(req,res) {
 function getPagosUsuario(req, res){
     var idUsuario = req.params.id;
     Pago.find({idUsuario:idUsuario},(err, pagos) => {
-        if (err) return res.status(500).send({ message: 'Error en la peticion' ,success:false});
+        if (err) return res.status(200).send({ message: 'Error en la peticion' ,success:false});
 
         if (!pagos) return res.status(200).send({ message: 'No hay pagos disponibles' ,success:false});
 
@@ -67,7 +67,7 @@ function getPagosUsuario(req, res){
 function getPagosTipoPago(req, res){
     var tipoPagoId = req.params.id;
     Pago.find({idTipoPago:tipoPagoId},(err, pagos) => {
-        if (err) return res.status(500).send({ message: 'Error en la peticion' ,success:false});
+        if (err) return res.status(200).send({ message: 'Error en la peticion' ,success:false});
 
         if (!pagos) return res.status(200).send({ message: 'No hay pagos disponibles' ,success:false});
 
@@ -81,7 +81,7 @@ function getPagosTipoPago(req, res){
 function getPagosCongreso(req, res){
     var congresoId = req.params.id;
     Pago.find({idCongreso:congresoId},(err, pagos) => {
-        if (err) return res.status(500).send({ message: 'Error en la peticion' ,success:false});
+        if (err) return res.status(200).send({ message: 'Error en la peticion' ,success:false});
 
         if (!pagos) return res.status(200).send({ message: 'No hay pagos disponibles' ,success:false});
 
@@ -97,7 +97,7 @@ function updatePago(req,res){
     var update = req.body;
 
     Pago.findByIdAndUpdate(actividadId, update, { new: true }, (err, actividadUpdated) => {
-        if (err) return res.status(500).send({ message: 'Error en la peticion', success: false });
+        if (err) return res.status(200).send({ message: 'Error en la peticion', success: false });
 
         if (!actividadUpdated) return res.status(200).send({ message: 'No se ha podido actualizar', success: false });
 

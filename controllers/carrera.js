@@ -17,17 +17,17 @@ function newCarrera(req, res) {
 
         Carrera.find({}).sort({ $natural: -1 }).exec(function(err, doc) {
             if (err) {
-                res.status(404).send({ message: 'No se ha registrado la carrera' });
+                res.status(200).send({ message: 'No se ha registrado la carrera' });
             }
             carrera.idCarrera = 0;
             carrera.save((err, carreraStored) => {
                 if (err) {
-                    return res.status(500).send({ message: 'Error al insertar la carrera ' + err })
+                    return res.status(200).send({ message: 'Error al insertar la carrera ' + err })
                 }
                 if (carreraStored) {
                     res.status(200).send({ carrera : carreraStored });
                 } else {
-                    res.status(404).send({ message: 'No se ha registrado la carrera' });
+                    res.status(200).send({ message: 'No se ha registrado la carrera' });
                 }
             });
         });
@@ -44,7 +44,7 @@ function updateCarrera(req,res){
     var update = req.body;
 
     Carrera.findByIdAndUpdate(carreraId, update, { new: true }, (err, carreraUpdated) => {
-        if (err) return res.status(500).send({ message: 'Error en la peticion', success: false });
+        if (err) return res.status(200).send({ message: 'Error en la peticion', success: false });
 
         if (!carreraUpdated) return res.status(200).send({ message: 'No se ha podido actualizar', success: false });
 
@@ -58,7 +58,7 @@ function updateCarrera(req,res){
 //get carreras
 function getCarreras(req, res){
     Carrera.find((err, carreras) => {
-        if (err) return res.status(500).send({ message: 'Error en la peticion' ,success:false});
+        if (err) return res.status(200).send({ message: 'Error en la peticion' ,success:false});
 
         if (!carreras) return res.status(200).send({ message: 'No hay carreras disponibles' ,success:false});
 
@@ -73,9 +73,9 @@ function getCarrera(req,res) {
     var carreraId = req.params.id;
 
     Carrera.findById(carreraId, (err, carrera) => {
-        if (err) return res.status(500).send({ message: 'Error en la peticion' ,success:false});
+        if (err) return res.status(200).send({ message: 'Error en la peticion' ,success:false});
 
-        if (!carrera) return res.status(404).send({ message: 'La carrera no existe' ,success:false});
+        if (!carrera) return res.status(200).send({ message: 'La carrera no existe' ,success:false});
 
         return res.status(200).send({ carrera });
     });
@@ -111,8 +111,8 @@ async function deleteCarrera(req, res) {
     //console.log(congresos);
     //return res.status(200).send({message:"Congresos encontrados " + congresos,success:true});
 
-    Carrera.findById(carreraId).remove(err => {
-        if (err) return res.status(500).send({ message: 'Error al eliminar la carrera', success: false });
+    Carrera.deleteOne({_id:carreraId},err => {
+        if (err) return res.status(200).send({ message: 'Error al eliminar la carrera', success: false });
 
         return res.status(200).send({ message: 'Carrera Eliminada', success: true });
     });
