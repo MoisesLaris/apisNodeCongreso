@@ -22,24 +22,25 @@ function newCarrera(req, res) {
             carrera.idCarrera = 0;
             carrera.save((err, carreraStored) => {
                 if (err) {
-                    return res.status(200).send({ message: 'Error al insertar la carrera ' + err })
+                    return res.status(200).send({ message: 'Error al insertar la carrera ' + err, success: false })
                 }
                 if (carreraStored) {
-                    res.status(200).send({ carrera : carreraStored });
+                    res.status(200).send({ message: "Carrera guardada", success: true });
                 } else {
-                    res.status(200).send({ message: 'No se ha registrado la carrera' });
+                    res.status(200).send({ message: 'No se ha registrado la carrera', success: false });
                 }
             });
         });
     } else {
         res.status(200).send({
-            message: "Hubo un problema al recibir los datos."
+            message: "Hubo un problema al recibir los datos.",
+            success: false
         });
     }
 }
 
 //Actualizar carrera
-function updateCarrera(req,res){
+function updateCarrera(req, res) {
     var carreraId = req.params.id;
     var update = req.body;
 
@@ -56,11 +57,11 @@ function updateCarrera(req,res){
 }
 
 //get carreras
-function getCarreras(req, res){
+function getCarreras(req, res) {
     Carrera.find((err, carreras) => {
-        if (err) return res.status(200).send({ message: 'Error en la peticion' ,success:false});
+        if (err) return res.status(200).send({ message: 'Error en la peticion', success: false });
 
-        if (!carreras) return res.status(200).send({ message: 'No hay carreras disponibles' ,success:false});
+        if (!carreras) return res.status(200).send({ message: 'No hay carreras disponibles', success: false });
 
         return res.status(200).send({
             carreras
@@ -69,13 +70,13 @@ function getCarreras(req, res){
 }
 
 //get Carrera por id
-function getCarrera(req,res) {
+function getCarrera(req, res) {
     var carreraId = req.params.id;
 
     Carrera.findById(carreraId, (err, carrera) => {
-        if (err) return res.status(200).send({ message: 'Error en la peticion' ,success:false});
+        if (err) return res.status(200).send({ message: 'Error en la peticion', success: false });
 
-        if (!carrera) return res.status(200).send({ message: 'La carrera no existe' ,success:false});
+        if (!carrera) return res.status(200).send({ message: 'La carrera no existe', success: false });
 
         return res.status(200).send({ carrera });
     });
@@ -96,32 +97,30 @@ async function deleteCarrera(req, res) {
         }
     });
     */
-   var congresos = await getCongresos(carreraId);
-        /*Congreso.countDocuments({idCarrera: carreraId}, function(err, c) {
-            console.log('Count is ' + c);
-            congresos = c;
-            console.log('congresos -> ' + congresos);
-        });*/
+    var congresos = await getCongresos(carreraId);
+    /*Congreso.countDocuments({idCarrera: carreraId}, function(err, c) {
+        console.log('Count is ' + c);
+        congresos = c;
+        console.log('congresos -> ' + congresos);
+    });*/
 
-    if(congresos >= 1)
-    {
-        return res.status(200).send({message:"No se puede borrar la carrera, por que tiene congresos asignados",success:false});
+    if (congresos >= 1) {
+        return res.status(200).send({ message: "No se puede borrar la carrera, por que tiene congresos asignados", success: false });
     }
 
     //console.log(congresos);
     //return res.status(200).send({message:"Congresos encontrados " + congresos,success:true});
 
-    Carrera.deleteOne({_id:carreraId},err => {
+    Carrera.deleteOne({ _id: carreraId }, err => {
         if (err) return res.status(200).send({ message: 'Error al eliminar la carrera', success: false });
 
         return res.status(200).send({ message: 'Carrera Eliminada', success: true });
     });
 }
 
-async function getCongresos(carreraId)
-{
-    var congresos = await Congreso.countDocuments({idCarrera: carreraId}, function(err, c) {
-        if(err) return handleError(err);
+async function getCongresos(carreraId) {
+    var congresos = await Congreso.countDocuments({ idCarrera: carreraId }, function(err, c) {
+        if (err) return handleError(err);
         console.log('Count is ' + c);
         return c;
     });
