@@ -10,7 +10,7 @@ var md_auth = require('../middleware/authenticated');
 api.post('/newFecha', fechaController.newFecha);
 api.get('/getFecha/:id', fechaController.getFecha);
 api.get('/getFechas', fechaController.getFechas);
-api.post('/updateFecha', fechaController.updateFecha);
-api.post('/deleteFecha', fechaController.deleteFecha);
+api.post('/updateFecha/:id', fechaController.updateFecha);
+api.post('/deleteFecha/:id', fechaController.deleteFecha);
 
 module.exports = api;
