@@ -15,12 +15,14 @@ var md_auth = require('../middleware/authenticated');
 function newTipoPago(req, res) {
     var params = req.body; //Toma todos los campos que llegan por req en body, y los pone en params
     var tipoPago = new TipoPago();
-    if (params.nombre && params.descripcion && params.precio) {
+    if (params.nombre && params.descripcion && params.precio && params.idCongreso) {
 
         tipoPago.nombre = params.nombre;
-        tipoPago.idCarrera = params.idCarrera;
+        tipoPago.descripcion = params.descripcion;
+        tipoPago.precio = params.precio;
+        tipoPago.idCongreso = params.idCongreso;
 
-        TipoPago.find({nombre:tipoPago.nombre}).sort({ $natural: -1 }).exec(function(err, doc) {
+        TipoPago.find({nombre:tipoPago.nombre,idCongreso:tipoPago.idCongreso}).sort({ $natural: -1 }).exec(function(err, doc) {
             if (err) {
                 res.status(200).send({ message: 'No se ha registrado el tipo pago' });
             }

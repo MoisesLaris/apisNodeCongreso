@@ -10,13 +10,12 @@ var ActividadUsuarioFecha = require('../model/actividadUsuarioFecha');
 function newPago(req, res) {
     var params = req.body; //Toma todos los campos que llegan por req en body, y los pone en params
     var pago = new Actividad();
-    if (params.idUsuario && params.idCongreso && params.idTipoPago && params.cantidad && params.status) {
+    if (params.idUsuario && params.idTipoPago && params.cantidad && params.status) {
 
-        pago.idUsuario = params.nombre;
-        pago.idCongreso = params.descripcion;
-        pago.idTipoPago = params.idCongreso;
+        pago.idUsuario = params.idUsuario;        
         pago.cantidad = params.cantidad;
         pago.status = params.status;
+        pago.idTipoPago = params.idTipoPago;
 
             pago.idPago = 0;
             pago.save((err, pagoStored) => {

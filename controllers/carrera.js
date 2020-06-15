@@ -15,7 +15,7 @@ function newCarrera(req, res) {
         carrera.nombre = params.nombre;
         carrera.centro = params.centro;
 
-        Carrera.find({}).sort({ $natural: -1 }).exec(function(err, doc) {
+        Carrera.find({nombre:params.nombre}).sort({ $natural: -1 }).exec(function(err, doc) {//Si encuentra una carrera con el mismo nombre, error
             if (err) {
                 res.status(200).send({ message: 'No se ha registrado la carrera' });
             }

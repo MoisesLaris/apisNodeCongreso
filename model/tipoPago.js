@@ -7,7 +7,8 @@ var tipoPagoSquema = Schema({
     idTipoPago: Number,
     nombre: String,
     descripcion: String,
-    precio: Number
+    precio: Number,
+    idCongreso: { type: Schema.ObjectId, ref: 'Congreso'},
 });
 
 module.exports = mongoose.model('TipoPago', tipoPagoSquema, "idTipoPago");
