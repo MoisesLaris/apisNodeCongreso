@@ -25,7 +25,7 @@ function newCongreso(req, res) {
                     return res.status(200).send({ message: 'Error al insertar el congreso ' + err })
                 }
                 if (congresoStored) {
-                    res.status(200).send({ congreso : congresoStored });
+                    res.status(200).send({ message:"Se ha creado el congreso correctamente", success: true });
                 } else {
                     res.status(200).send({ message: 'No se ha registrado el congreso' });
                 }
@@ -87,12 +87,15 @@ async function deleteCongreso(req, res) {
 
    var actividades = await getActividades(congresoId);
 
+   //return res.status(200).send({message:"Regreso de actividades " + actividades});
+   //if(actividades == null)//Calando cosas
+   //actividades = 0;
     if(actividades >= 1)
     {
         return res.status(200).send({message:"No se puede borrar el congreso, por que tiene actividades asignadas",success:false});
     }
 
-    Congreso.deleteone({_id:congresoId},err => {
+    Congreso.deleteOne({_id:congresoId},err => {
         if (err) return res.status(200).send({ message: 'Error al eliminar el congreso', success: false });
 
         return res.status(200).send({ message: 'Congreso eliminado', success: true });

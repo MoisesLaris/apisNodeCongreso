@@ -105,7 +105,7 @@ function deleteFaq(req, res) {
         return res.status(200).send({ message: 'No tienes permisos para esto', success: false });
     }
 
-    FAQ.deleteone({_id:faq},err => {
+    FAQ.deleteOne({_id:faq},err => {
         if (err) return res.status(200).send({ message: 'Error al eliminar usuario', success: false });
 
         return res.status(200).send({ message: 'Usuario Eliminado', success: true });
