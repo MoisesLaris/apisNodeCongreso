@@ -21,12 +21,11 @@ function newFAQ(req, res) {
         Faq.respuesta = params.respuesta;
         Faq.idCongreso = params.idCongreso;
 
-        FAQ.find({}).sort({ $natural: -1 }).exec(function(err, doc) {//Checar, posible error
+        FAQ.find({}).sort({ $natural: -1 }).exec(function(err, doc) { //Checar, posible error
             if (err) {
                 res.status(200).send({ message: 'No se guardo la pregunta', success: false });
             }
-            var x = doc[0].idUsuario + 1;
-            Faq.idFAQ = x;
+
             Faq.save((err, faqStored) => {
                 if (err) {
                     return res.status(200).send({ message: 'Error al insertar la nueva pregunta ' + err, success: false })
@@ -65,9 +64,9 @@ function getFaq(req, res) {
 function getFaqs(req, res) {
 
     FAQ.find((err, faqs, total) => {
-        if (err) return res.status(200).send({ message: 'Error en la peticion' ,success:false});
+        if (err) return res.status(200).send({ message: 'Error en la peticion', success: false });
 
-        if (!faqs) return res.status(200).send({ message: 'No hay preguntas disponibles' ,success:false});
+        if (!faqs) return res.status(200).send({ message: 'No hay preguntas disponibles', success: false });
 
         return res.status(200).send({
             faqs
@@ -105,7 +104,7 @@ function deleteFaq(req, res) {
         return res.status(200).send({ message: 'No tienes permisos para esto', success: false });
     }
 
-    FAQ.deleteOne({_id:faq},err => {
+    FAQ.deleteOne({ _id: faq }, err => {
         if (err) return res.status(200).send({ message: 'Error al eliminar usuario', success: false });
 
         return res.status(200).send({ message: 'Usuario Eliminado', success: true });

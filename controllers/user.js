@@ -29,7 +29,7 @@ function pruebas(req, res) {
 function newUser(req, res) {
     var params = req.body; //Toma todos los campos que llegan por req en body, y los pone en params
     var user = new User();
-    if (params.nombre && params.apellidos && params.correo && params.password && params.semestre && params.grupo) {
+    if (params.nombre && params.apellidos && params.correo && params.password && params.semestre && params.grupo && params.idCarrera) {
         //Seguir con el video jeje
 
         user.nombre = params.nombre;
@@ -38,7 +38,7 @@ function newUser(req, res) {
         user.correo = params.correo.toLowerCase();
         user.semestre = params.semestre;
         user.grupo = params.grupo;
-        user.idCarrera = null;
+        user.idCarrera = params.idCarrera;
 
         //Controlar los usuarios repetidos por correo
         User.findOne({ correo: user.correo.toLowerCase() }).exec((err, users) => {
