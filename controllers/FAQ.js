@@ -79,9 +79,9 @@ function getFaqs(req, res) {
 //Consultar usuarios por paginas
 function getFaqsCongreso(req, res) {
 
-    congresoId = req.params.id;
+    var congresoId = req.params.id;
 
-    FAQ.find({idCongreso:congresoId},(err, faqs, total) => {
+    FAQ.find({idCongreso:congresoId},(err, faqs) => {
         if (err) return res.status(200).send({ message: 'Error en la peticion', success: false });
 
         if (!faqs) return res.status(200).send({ message: 'No hay preguntas disponibles', success: false });
