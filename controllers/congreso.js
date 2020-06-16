@@ -64,6 +64,22 @@ function getCongresos(req, res){
     }).sort('_id').populate({path:'idCarrera'});
 }
 
+//get congresos
+function getCongresosCarrera(req, res){
+
+    var carreraId = req.params.id;
+
+    Congreso.find({idCarrera:carreraId},(err, congresos) => {
+        if (err) return res.status(200).send({ message: 'Error en la peticion' ,success:false});
+
+        if (!congresos) return res.status(200).send({ message: 'No hay congresos disponibles' ,success:false});
+
+        return res.status(200).send({
+            congresos
+        });
+    }).sort('_id').populate({path:'idCarrera'});
+}
+
 //Actualizar Congreso
 function updateCongreso(req,res){
     var congresoId = req.params.id;
@@ -117,5 +133,6 @@ module.exports = {
     getCongreso,
     getCongresos,
     updateCongreso,
-    deleteCongreso
+    deleteCongreso,
+    getCongresosCarrera
 }

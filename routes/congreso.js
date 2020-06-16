@@ -10,5 +10,6 @@ api.get('/getCongreso/:id',congresoController.getCongreso);
 api.get('/getCongresos',congresoController.getCongresos);
 api.post('/updateCongreso/:id',congresoController.updateCongreso);
 api.post('/deleteCongreso/:id',congresoController.deleteCongreso);
+api.get('/getCongresos/idCongreso/:id',congresoController.getCongresosCarrera);
 
 module.exports = api;
