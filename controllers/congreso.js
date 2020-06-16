@@ -61,7 +61,7 @@ function getCongresos(req, res){
         return res.status(200).send({
             congresos
         });
-    }).sort('_id');
+    }).sort('_id').populate({path:'idCarrera'});
 }
 
 //Actualizar Congreso
