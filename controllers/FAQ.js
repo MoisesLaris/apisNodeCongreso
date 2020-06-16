@@ -57,7 +57,7 @@ function getFaq(req, res) {
         if (!faq) return res.status(200).send({ message: 'La pregunta no existe' });
 
         return res.status(200).send({ faq });
-    }).populate({path:'idCongreso'});
+    });
 }
 
 //Consultar usuarios por paginas
