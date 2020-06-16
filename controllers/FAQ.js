@@ -74,6 +74,24 @@ function getFaqs(req, res) {
     }).sort('_id').populate({path:'idCongreso'});
 
 }
+
+//Consultar preguntas por idCongreso
+//Consultar usuarios por paginas
+function getFaqsCongreso(req, res) {
+
+    congresoId = req.params.id;
+
+    FAQ.find({idCongreso:congresoId},(err, faqs, total) => {
+        if (err) return res.status(200).send({ message: 'Error en la peticion', success: false });
+
+        if (!faqs) return res.status(200).send({ message: 'No hay preguntas disponibles', success: false });
+
+        return res.status(200).send({
+            faqs
+        });
+    }).sort('_id').populate({path:'idCongreso'});
+
+}
 //updateFaq
 function updateFaq(req, res) {
     var faqId = req.params.id;
@@ -116,5 +134,6 @@ module.exports = {
     getFaq,
     getFaqs,
     updateFaq,
-    deleteFaq
+    deleteFaq,
+    getFaqsCongreso
 }
