@@ -18,19 +18,19 @@ function newActividad(req, res) {
         actividad.fechas = params.fechas;
         actividad.color = params.color;
 
-        Actividad.find({nombre:actividad.nombre,idCongreso:actividad.idCongreso}).sort({ $natural: -1 }).exec(function(err, doc) {
+        Actividad.find({ nombre: actividad.nombre, idCongreso: actividad.idCongreso }).sort({ $natural: -1 }).exec(function(err, doc) {
             if (err) {
                 res.status(200).send({ message: 'No se ha registrado la actividad' });
             }
             actividad.idActividad = 0;
             actividad.save((err, actividadStored) => {
                 if (err) {
-                    return res.status(200).send({ message: 'Error al insertar la actividad ' + err })
+                    return res.status(200).send({ success: false, message: 'Error al insertar la actividad ' + err })
                 }
                 if (actividadStored) {
-                    res.status(200).send({ actividad : actividadStored });
+                    res.status(200).send({ success: true, message: "Actividad registrada" });
                 } else {
-                    res.status(200).send({ message: 'No se ha registrado la actividad' });
+                    res.status(200).send({ success: false, message: 'No se ha registrado la actividad' });
                 }
             });
         });
@@ -42,25 +42,25 @@ function newActividad(req, res) {
 }
 
 //get Actividad
-function getActividad(req,res) {
+function getActividad(req, res) {
     var actividadId = req.params.id;
 
     Actividad.findById(actividadId, (err, actividad) => {
-        if (err) return res.status(200).send({ message: 'Error en la peticion' ,success:false});
+        if (err) return res.status(200).send({ message: 'Error en la peticion', success: false });
 
-        if (!actividad) return res.status(200).send({ message: 'La actividad no existe' ,success:false});
+        if (!actividad) return res.status(200).send({ message: 'La actividad no existe', success: false });
 
         return res.status(200).send({ actividad });
     });
 }
 
 //get actividades con id congreso
-function getActividadesCongreso(req, res){
+function getActividadesCongreso(req, res) {
     var idCongreso = req.params.id;
-    Actividades.find({idCongreso:idCongreso},(err, actividades) => {
-        if (err) return res.status(200).send({ message: 'Error en la peticion' ,success:false});
+    Actividades.find({ idCongreso: idCongreso }, (err, actividades) => {
+        if (err) return res.status(200).send({ message: 'Error en la peticion', success: false });
 
-        if (!actividades) return res.status(200).send({ message: 'No hay actividades disponibles' ,success:false});
+        if (!actividades) return res.status(200).send({ message: 'No hay actividades disponibles', success: false });
 
         return res.status(200).send({
             actividades
@@ -69,7 +69,7 @@ function getActividadesCongreso(req, res){
 }
 
 //Actualizar Actividad
-function updateActividad(req,res){
+function updateActividad(req, res) {
     var actividadId = req.params.id;
     var update = req.body;
 
@@ -89,24 +89,22 @@ function updateActividad(req,res){
 async function deleteActividad(req, res) {
     var actividadId = req.params.id;
 
-   var actividadesUsuarioFecha = await getActividadesUsuarioFecha(actividadId);
+    var actividadesUsuarioFecha = await getActividadesUsuarioFecha(actividadId);
 
-    if(actividadesUsuarioFecha >= 1)
-    {
-        return res.status(200).send({message:"No se puede borrar la actividad, por que tiene actividades asignadas",success:false});
+    if (actividadesUsuarioFecha >= 1) {
+        return res.status(200).send({ message: "No se puede borrar la actividad, por que tiene actividades asignadas", success: false });
     }
 
-    Actividad.deleteOne({_id:actividadId},err => {
+    Actividad.deleteOne({ _id: actividadId }, err => {
         if (err) return res.status(200).send({ message: 'Error al eliminar la actividad', success: false });
 
         return res.status(200).send({ message: 'Actividad eliminada', success: true });
     });
 }
 
-async function getActividadesUsuarioFecha(actividadId)
-{
-    var actividades = await ActividadUsuarioFecha.countDocuments({idActividad: actividadId}, function(err, c) {
-        if(err) return handleError(err);
+async function getActividadesUsuarioFecha(actividadId) {
+    var actividades = await ActividadUsuarioFecha.countDocuments({ idActividad: actividadId }, function(err, c) {
+        if (err) return handleError(err);
         console.log('Count is ' + c);
         return c;
     });
