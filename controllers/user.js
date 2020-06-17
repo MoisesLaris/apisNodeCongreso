@@ -1,8 +1,14 @@
 'use strict'
 
 var mongoose = require('mongoose');
+
+//var ObjectId = mongoose.Types.ObjectId();
+
+var ObjectId = require('mongodb').ObjectID;
+
 var User = require('../model/user');
 var mongoosePaginate = require('mongoose-pagination');
+var Pago = require('../model/pago');
 //encriptar contraseña
 var bcrypt = require('bcrypt-nodejs');
 
@@ -157,6 +163,82 @@ function getUsers(req, res) {
 
 }
 
+//Get congresos en los que esta inscrito el usuario
+function getUserCongresos(req, res)
+{
+    //var usuarioId = req.user.sub;//Lo tomamos de el token de JWT
+
+    Pago.aggregate([//Sobre la coleccion de pago, puede ser cualquier otra
+        { "$match": {idUsuario: ObjectId("5ee3bbf17853d008ffed8e01")}},//Este es como el where
+        {"$lookup"://Join, une dos tablas
+            {
+                //En est parte se une pago con usuario
+              from: "usuario",
+              localField: "idUsuario",
+              foreignField:"_id",
+              as: "usuario"
+            }},{
+                "$unwind": "$usuario"//Para regresar solo uno, no un array
+              },
+              //En esta parte se une pago con tipoPago
+              {"$lookup":
+            {
+              from: "idTipoPago",
+              localField: "idTipoPago",
+              foreignField:"_id",
+              as: "tipoPago"
+            }},{
+                "$unwind": "$tipoPago"
+              },
+            {"$group":{
+                _id: "$tipoPago._id",
+                idCongreso : {"$first":"$tipoPago.idCongreso"},
+                total: {"$first":"$tipoPago.precio"},
+                pagado: {"$sum":"$cantidad"}
+            }}
+    ]).exec((err,result) => {
+        console.log(`result`,result);
+        console.log(`err`,err);
+
+        return res.status(200).send({
+            message: "Se edito el usuario correctamente",
+            success: true
+        });
+    });
+
+    //5ee9676e740b93e92c2e1430 -> idtipoPago
+    //5ee9676e740b93e92c2e1430 -> deluxe
+
+    //5ee3bbf17853d008ffed8e01 -> idUsuario
+
+    //5ee51fd2988f5e0a903d0d91 -> mauricio
+
+    /*Pago.find({idUsuario:usuarioId},(err, pagos) =>
+        if (err) return res.status(500).send({ message: 'Error en la peticion', success: false });
+
+        if (!pagos) return res.status(404).send({ message: 'No hay usuarios disponibles', success: false });
+
+        var tiposPago = [];
+
+        var suma = 0.0;
+        var currentTipoPago = "";
+
+        pagos.forEach((pago) => {
+            if(pago.idTipoPago._id == "")
+            {
+                suma = 0.0;
+                currentTipoPago = pago.idTipoPago._id;
+            }
+            var suma = suma + pago.cantidad;
+            if(suma == pago.idTipoPago.total)
+                tiposPago.push(pago.idTipoPago);
+        });
+
+        return listaCongresos(tiposPagos);
+
+    }).sort('idTipoPago').populate({path:'idTipoPago'});*/
+}
+
 //Actualizar usuario
 function updateUser(req, res) {
     var userId = req.params.id;
@@ -220,5 +302,6 @@ module.exports = {
     getUsers,
     updateUser,
     deleteUser,
-    getUserByToken
+    getUserByToken,
+    getUserCongresos
 }
