@@ -56,8 +56,8 @@ function getActividad(req, res) {
 
 //get actividades con id congreso
 function getActividadesCongreso(req, res) {
-    var idCongreso = req.params.id;
-    Actividades.find({ idCongreso: idCongreso }, (err, actividades) => {
+    var congresoId = req.params.id;
+    Actividad.find({ idCongreso: congresoId }, (err, actividades) => {
         if (err) return res.status(200).send({ message: 'Error en la peticion', success: false });
 
         if (!actividades) return res.status(200).send({ message: 'No hay actividades disponibles', success: false });
