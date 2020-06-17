@@ -8,7 +8,8 @@ var actividadSchema = Schema({
     idCongreso: { type: Schema.ObjectId, ref: 'Congreso'},
     nombre: String,
     descripcion: String,
-    fechas : []
+    fechas : [],
+    color: String
 });
 
 module.exports = mongoose.model('Actividad',actividadSchema,'actividad');
