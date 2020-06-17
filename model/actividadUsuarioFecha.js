@@ -7,8 +7,7 @@ var actividadUsuarioFechaSchema = Schema({
     idActividadUsuarioFecha : Number,
     idActividad: { type: Schema.ObjectId, ref: 'Actividad'},
     idUsuario: { type: Schema.ObjectId, ref: 'Usuario'},
-    idFecha: { type: Schema.ObjectId, ref: 'Fecha'},
-    horario: Date
+    fecha: Date
 });
 
 module.exports = mongoose.model('ActividadUsuarioFecha',actividadUsuarioFechaSchema,'actividadUsuarioFecha');

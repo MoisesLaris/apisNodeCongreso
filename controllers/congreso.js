@@ -10,10 +10,12 @@ var Actividad = require('../model/actividad');
 function newCongreso(req, res) {
     var params = req.body; //Toma todos los campos que llegan por req en body, y los pone en params
     var congreso = new Congreso();
-    if (params.nombre && params.idCarrera) {
+    if (params.nombre && params.idCarrera && params.fechaInicio && params.fechafin) {
 
         congreso.nombre = params.nombre;
         congreso.idCarrera = params.idCarrera;
+        congreso.fechaInicio = params.fechaInicio;
+        congreso.fechaFin = params.fechaFin;
 
         Congreso.find({nombre:congreso.nombre}).sort({ $natural: -1 }).exec(function(err, doc) {
             if (err) {

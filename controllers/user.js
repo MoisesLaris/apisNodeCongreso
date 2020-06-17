@@ -160,7 +160,6 @@ function getUsers(req, res) {
             users
         });
     }).sort('_id');
-
 }
 
 //Get congresos en los que esta inscrito el usuario
