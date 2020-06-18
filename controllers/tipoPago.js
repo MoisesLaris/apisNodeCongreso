@@ -69,6 +69,22 @@ function getTipoPagos(req, res) {
     }).sort('_id');
 }
 
+//get congresos
+function getTipoPagosCongreso(req, res) {
+
+    var congresoId = req.params.id;
+
+    TipoPago.find({idCongreso:congresoId},(err, tipoPagos) => {
+        if (err) return res.status(200).send({ message: 'Error en la peticion', success: false });
+
+        if (!tipoPagos) return res.status(200).send({ message: 'No hay tipos pagos disponibles', success: false });
+
+        return res.status(200).send({
+            tipoPagos
+        });
+    }).sort('_id');
+}
+
 //Actualizar Congreso
 function updateTipoPago(req, res) {
     var tipoPagoId = req.params.id;
@@ -117,5 +133,6 @@ module.exports = {
     getTipoPago,
     getTipoPagos,
     updateTipoPago,
-    deleteTipoPago
+    deleteTipoPago,
+    getTipoPagosCongreso
 }
