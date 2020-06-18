@@ -22,48 +22,46 @@ function newTipoPago(req, res) {
         tipoPago.precio = params.precio;
         tipoPago.idCongreso = params.idCongreso;
 
-        TipoPago.find({nombre:tipoPago.nombre,idCongreso:tipoPago.idCongreso}).sort({ $natural: -1 }).exec(function(err, doc) {
+        TipoPago.find({ nombre: tipoPago.nombre, idCongreso: tipoPago.idCongreso }).sort({ $natural: -1 }).exec(function(err, doc) {
             if (err) {
-                res.status(200).send({ message: 'No se ha registrado el tipo pago' });
+                res.status(200).send({ message: 'No se ha registrado el tipo pago', success: false });
             }
             tipoPago.idTipoPago = 0;
             tipoPago.save((err, tipoPagoStored) => {
                 if (err) {
-                    return res.status(200).send({ message: 'Error al insertar el tipo pago ' + err })
+                    return res.status(200).send({ message: 'Error al insertar el tipo pago ' + err, success: false })
                 }
                 if (tipoPagoStored) {
-                    res.status(200).send({ congreso : tipoPagoStored });
+                    res.status(200).send({ message: 'Paquete registrado', success: true });
                 } else {
-                    res.status(200).send({ message: 'No se ha registrado el tipo pago' });
+                    res.status(200).send({ message: 'No se ha registrado paquete', success: false });
                 }
             });
         });
     } else {
-        res.status(200).send({
-            message: "Hubo un problema al recibir los datos."
-        });
+        res.status(200).send({ message: 'Error en la peticion', success: false });
     }
 }
 
 //get Congreso
-function getTipoPago(req,res) {
+function getTipoPago(req, res) {
     var tipoPagoId = req.params.id;
 
     TipoPago.findById(tipoPagoId, (err, tipoPago) => {
-        if (err) return res.status(200).send({ message: 'Error en la peticion' ,success:false});
+        if (err) return res.status(200).send({ message: 'Error en la peticion', success: false });
 
-        if (!tipoPago) return res.status(200).send({ message: 'El tipo pago no existe' ,success:false});
+        if (!tipoPago) return res.status(200).send({ message: 'El tipo pago no existe', success: false });
 
         return res.status(200).send({ tipoPago });
     });
 }
 
 //get congresos
-function getTipoPagos(req, res){
+function getTipoPagos(req, res) {
     TipoPago.find((err, tipoPagos) => {
-        if (err) return res.status(200).send({ message: 'Error en la peticion' ,success:false});
+        if (err) return res.status(200).send({ message: 'Error en la peticion', success: false });
 
-        if (!congresos) return res.status(200).send({ message: 'No hay tipos pagos disponibles' ,success:false});
+        if (!tipoPagos) return res.status(200).send({ message: 'No hay tipos pagos disponibles', success: false });
 
         return res.status(200).send({
             tipoPagos
@@ -72,7 +70,7 @@ function getTipoPagos(req, res){
 }
 
 //Actualizar Congreso
-function updateTipoPago(req,res){
+function updateTipoPago(req, res) {
     var tipoPagoId = req.params.id;
     var update = req.body;
 
@@ -92,24 +90,22 @@ function updateTipoPago(req,res){
 async function deleteTipoPago(req, res) {
     var pagoId = req.params.id;
 
-   var pagos = await getPagos(pagoId);
+    var pagos = await getPagos(pagoId);
 
-    if(pagos >= 1)
-    {
-        return res.status(200).send({message:"No se puede borrar el congreso, por que tiene pagos asignados",success:false});
+    if (pagos >= 1) {
+        return res.status(200).send({ message: "No se puede borrar el congreso, por que tiene pagos asignados", success: false });
     }
 
-    TipoPago.deleteOne({_id:pagoId},err => {
+    TipoPago.deleteOne({ _id: pagoId }, err => {
         if (err) return res.status(200).send({ message: 'Error al eliminar el tipo pago', success: false });
 
         return res.status(200).send({ message: 'Tipo pago eliminado', success: true });
     });
 }
 
-async function getPagos(tipoPagoId)
-{
-    var pagos = await Actividad.countDocuments({idTipoPago: tipoPagoId}, function(err, c) {
-        if(err) return handleError(err);
+async function getPagos(tipoPagoId) {
+    var pagos = await Actividad.countDocuments({ idTipoPago: tipoPagoId }, function(err, c) {
+        if (err) return handleError(err);
         console.log('Count is ' + c);
         return c;
     });
