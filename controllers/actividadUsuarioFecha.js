@@ -78,7 +78,7 @@ function getActividadesActividad(req, res){
         return res.status(200).send({
             actividades
         });
-    }).sort('_id');
+    }).sort('_id').populate({ path: 'idUsuario' });
 }
 
 //get actividadesUsuarioFecha por idFecha
