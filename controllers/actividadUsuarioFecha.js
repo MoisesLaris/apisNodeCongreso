@@ -18,23 +18,24 @@ function newActividadUsuarioFecha(req, res) {
 
         ActividadUsuarioFecha.find({idUsuario:actividadUsuarioFecha.idUsuario,idFecha:actividadUsuarioFecha.idFecha,horario:actividadUsuarioFecha.horario}).sort({ $natural: -1 }).exec(function(err, doc) {
             if (err) {
-                res.status(200).send({ message: 'No se ha registrado la actividad' });
+                res.status(200).send({ message: 'No se ha registrado la actividad' ,success:false});
             }
             actividadUsuarioFecha.idActividadUsuarioFecha = 0;
             actividadUsuarioFecha.save((err, actividadStored) => {
                 if (err) {
-                    return res.status(200).send({ message: 'Error al insertar la actividad ' + err })
+                    return res.status(200).send({ message: 'Error al insertar la actividad ', success:true })
                 }
                 if (actividadStored) {
-                    res.status(200).send({ actividad : actividadStored });
+                    res.status(200).send({ message: 'Se ha registrado la actividad' ,success:true});
                 } else {
-                    res.status(200).send({ message: 'No se ha registrado la actividad' });
+                    res.status(200).send({ message: 'No se ha registrado la actividad' ,success:false});
                 }
             });
         });
     } else {
         res.status(200).send({
             message: "Hubo un problema al recibir los datos."
+            ,success:false
         });
     }
 }

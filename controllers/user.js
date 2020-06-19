@@ -166,9 +166,10 @@ function getUsers(req, res) {
 function getUserCongresos(req, res)
 {
     //var usuarioId = req.user.sub;//Lo tomamos de el token de JWT
+    var usuarioId = req.params.id;
 
     Pago.aggregate([//Sobre la coleccion de pago, puede ser cualquier otra
-        { "$match": {idUsuario: ObjectId("5ee3bbf17853d008ffed8e01")}},//Este es como el where
+        { "$match": {idUsuario: ObjectId(/*"5ee3bbf17853d008ffed8e01"*/usuarioId)}},//Este es como el where
         {"$lookup"://Join, une dos tablas
             {
                 //En est parte se une pago con usuario
@@ -186,22 +187,41 @@ function getUserCongresos(req, res)
               localField: "idTipoPago",
               foreignField:"_id",
               as: "tipoPago"
-            }},{
-                "$unwind": "$tipoPago"
-              },
-            {"$group":{
+            }},{"$group":{
                 _id: "$tipoPago._id",
                 idCongreso : {"$first":"$tipoPago.idCongreso"},
                 total: {"$first":"$tipoPago.precio"},
                 pagado: {"$sum":"$cantidad"}
-            }}
+            }},
+            {"$lookup":
+            {
+              from: "congreso",
+              localField: "idCongreso",
+              foreignField:"_id",
+              as: "congreso"
+            }},
+            {
+                "$unwind": {"path":"$congreso", "preserveNullAndEmptyArrays":true}//Para regresar solo uno, no un array
+            },
+            
     ]).exec((err,result) => {
         console.log(`result`,result);
         console.log(`err`,err);
 
+        var congresos_filtrados = [];
+
+        
+        result.forEach((congr) => {
+            if(congr.pagado >= congr.total)
+            {
+                congresos_filtrados.push(congr);
+            }
+        });
+
         return res.status(200).send({
             message: "Se edito el usuario correctamente",
-            success: true
+            success: true,
+            congresos: congresos_filtrados
         });
     });
 
