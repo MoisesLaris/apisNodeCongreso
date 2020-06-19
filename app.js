@@ -15,6 +15,7 @@ var fecha_routes = require('./routes/fecha');
 var actividad_routes = require('./routes/actividad');
 var actividadUF_routes = require('./routes/actividadUsuarioFecha');
 var tipo_pago = require('./routes/tipoPago');
+var pago = require('./routes/pago');
 
 //Cargar middlewares
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -32,6 +33,7 @@ app.use('/api', fecha_routes);
 app.use('/api', actividad_routes);
 app.use('/api', actividadUF_routes);
 app.use('/api', tipo_pago);
+app.use('/api', pago);
 
 //Exportar
 
