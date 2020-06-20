@@ -116,7 +116,7 @@ function updateFaq(req, res) {
 //Borrar usuario
 function deleteFaq(req, res) {
     var tipoUsuario = req.user.tipoUsuario;
-    var faq = rep.params.id;
+    var faq = req.params.id;
 
     if (tipoUsuario != 0) {
         return res.status(200).send({ message: 'No tienes permisos para esto', success: false });
