@@ -123,9 +123,9 @@ function deleteFaq(req, res) {
     }
 
     FAQ.deleteOne({ _id: faq }, err => {
-        if (err) return res.status(200).send({ message: 'Error al eliminar usuario', success: false });
+        if (err) return res.status(200).send({ message: 'Error al eliminar la pregunta', success: false });
 
-        return res.status(200).send({ message: 'Usuario Eliminado', success: true });
+        return res.status(200).send({ message: 'Pregunta Eliminado', success: true });
     });
 }
 
