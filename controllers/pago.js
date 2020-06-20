@@ -73,7 +73,7 @@ function getPagosTipoPago(req, res){
         return res.status(200).send({
             pagos
         });
-    }).sort('_id');
+    }).sort('_id').populate([{path:'idTipoPago'},{path:'idUsuario'}]);
 }
 
 //get actividades con id congreso

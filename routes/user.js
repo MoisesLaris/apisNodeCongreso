@@ -16,6 +16,6 @@ api.get('/getUsers', md_auth.ensureAuth, userController.getUsers);
 api.post('/updateUser/:id', md_auth.ensureAuth, userController.updateUser);
 api.post('/deleteUser/:id', md_auth.ensureAuth, userController.deleteUser);
 api.get('/getUserByToken', md_auth.ensureAuth, userController.getUserByToken);
-api.get('/getPruebas/idUsuario/:id',userController.getUserCongresos);
+api.get('/getUserCongresos',md_auth.ensureAuth,userController.getUserCongresos);
 
 module.exports = api;

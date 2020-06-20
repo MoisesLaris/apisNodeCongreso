@@ -165,8 +165,8 @@ function getUsers(req, res) {
 //Get congresos en los que esta inscrito el usuario
 function getUserCongresos(req, res)
 {
-    //var usuarioId = req.user.sub;//Lo tomamos de el token de JWT
-    var usuarioId = req.params.id;
+    var usuarioId = req.user.sub;//Lo tomamos de el token de JWT
+    //var usuarioId = req.params.id;
 
     Pago.aggregate([//Sobre la coleccion de pago, puede ser cualquier otra
         { "$match": {idUsuario: ObjectId(/*"5ee3bbf17853d008ffed8e01"*/usuarioId)}},//Este es como el where

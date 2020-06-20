@@ -4,6 +4,8 @@ var mongoose = require('mongoose');
 
 var Congreso = require('../model/congreso');
 var Actividad = require('../model/actividad');
+var Pago = require('../model/pago');
+var TipoPago = require('../model/tipoPago');
 //encriptar contraseña
 
 //Nuevo Congreso
@@ -82,6 +84,71 @@ function getCongresosCarrera(req, res) {
     }).sort('_id').populate({ path: 'idCarrera' });
 }
 
+//Get congresos en los que esta inscrito el usuario
+function getCongresoUsers(req, res)
+{
+    //var usuarioId = req.user.sub;//Lo tomamos de el token de JWT
+    var usuarioId = req.params.id;
+
+    Pago.aggregate([//Sobre la coleccion de pago, puede ser cualquier otra
+       // { "$match": {idUsuario: ObjectId(/*"5ee3bbf17853d008ffed8e01"*/usuarioId)}},//Este es como el where
+        {"$lookup"://Join, une dos tablas
+            {
+                //En est parte se une pago con usuario
+              from: "usuario",
+              localField: "idUsuario",
+              foreignField:"_id",
+              as: "usuario"
+            }},{
+                "$unwind": "$usuario"//Para regresar solo uno, no un array
+              },
+              //En esta parte se une pago con tipoPago
+              {"$lookup":
+            {
+              from: "idTipoPago",
+              localField: "idTipoPago",
+              foreignField:"_id",
+              as: "tipoPago"
+            }},{"$group":{
+                _id: "$tipoPago._id",
+                idCongreso : {"$first":"$tipoPago.idCongreso"},
+                total: {"$first":"$tipoPago.precio"},
+                pagado: {"$sum":"$cantidad"},
+                usuario: {"$first":"$usuario.idUsuario"}
+            }},
+            {"$lookup":
+            {
+              from: "congreso",
+              localField: "idCongreso",
+              foreignField:"_id",
+              as: "congreso"
+            }},
+            {
+                "$unwind": {"path":"$congreso", "preserveNullAndEmptyArrays":true}//Para regresar solo uno, no un array
+            },
+            
+    ]).exec((err,result) => {
+        console.log(`result`,result);
+        console.log(`err`,err);
+
+        var usuarios = [];
+
+        
+        result.forEach((usuario) => {
+            if(usuario.idCongreso[0] == req.params.id)
+            {
+                usuarios.push(usuario);
+            }
+        });
+
+        return res.status(200).send({
+            message: "Se edito el usuario correctamente",
+            success: true,
+            usuarios: result
+        });
+    });
+}
+
 //Actualizar Congreso
 function updateCongreso(req, res) {
     var congresoId = req.params.id;
@@ -134,5 +201,6 @@ module.exports = {
     getCongresos,
     updateCongreso,
     deleteCongreso,
-    getCongresosCarrera
+    getCongresosCarrera,
+    getCongresoUsers
 }
