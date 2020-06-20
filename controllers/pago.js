@@ -20,17 +20,18 @@ function newPago(req, res) {
             pago.idPago = 0;
             pago.save((err, pagoStored) => {
                 if (err) {
-                    return res.status(200).send({ message: 'Error al insertar el pago ' + err })
+                    return res.status(200).send({ message: 'Error al insertar el pago ' + err,success:false })
                 }
                 if (pagoStored) {
-                    res.status(200).send({ pago : pagoStored });
+                    res.status(200).send({ message:'Se registro el pago correctamente', success:true });
                 } else {
-                    res.status(200).send({ message: 'No se ha registrado el pago' });
+                    res.status(200).send({ message: 'No se ha registrado el pago' ,success:false});
                 }
             });
     } else {
         res.status(200).send({
-            message: "Hubo un problema al recibir los datos."
+            message: "Hubo un problema al recibir los datos.",
+            success: false
         });
     }
 }
