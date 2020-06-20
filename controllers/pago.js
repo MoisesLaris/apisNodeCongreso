@@ -3,13 +3,13 @@
 var mongoose = require('mongoose');
 
 var Pago = require('../model/pago');
-var ActividadUsuarioFecha = require('../model/actividadUsuarioFecha');
+//var ActividadUsuarioFecha = require('../model/actividadUsuarioFecha');
 //encriptar contraseña
 
 //Nueva Actividad
 function newPago(req, res) {
     var params = req.body; //Toma todos los campos que llegan por req en body, y los pone en params
-    var pago = new Actividad();
+    var pago = new Pago();
     if (params.idUsuario && params.idTipoPago && params.cantidad && params.status) {
 
         pago.idUsuario = params.idUsuario;        
