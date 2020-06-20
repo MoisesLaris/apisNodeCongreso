@@ -23,7 +23,7 @@ function newPago(req, res) {
                     return res.status(200).send({ message: 'Error al insertar el pago ' + err })
                 }
                 if (pagoStored) {
-                    res.status(200).send({ actividad : actividadStored });
+                    res.status(200).send({ pago : pagoStored });
                 } else {
                     res.status(200).send({ message: 'No se ha registrado el pago' });
                 }
