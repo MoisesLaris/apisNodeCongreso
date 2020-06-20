@@ -6,7 +6,7 @@ var Pago = require('../model/pago');
 //var ActividadUsuarioFecha = require('../model/actividadUsuarioFecha');
 //encriptar contraseña
 
-//Nueva Actividad
+//Nueva Pago
 function newPago(req, res) {
     var params = req.body; //Toma todos los campos que llegan por req en body, y los pone en params
     var pago = new Pago();
@@ -36,7 +36,7 @@ function newPago(req, res) {
     }
 }
 
-//get Actividad
+//get Pago
 function getPago(req,res) {
     var pagoId = req.params.id;
 
@@ -49,7 +49,7 @@ function getPago(req,res) {
     });
 }
 
-//get actividades con id usuario
+//get pagos con id usuario
 function getPagosUsuario(req, res){
     var idUsuario = req.params.id;
     Pago.find({idUsuario:idUsuario},(err, pagos) => {
@@ -63,7 +63,7 @@ function getPagosUsuario(req, res){
     }).sort('_id');
 }
 
-//get actividades con id tipo pago
+//get pagos con id tipo pago
 function getPagosTipoPago(req, res){
     var tipoPagoId = req.params.id;
     Pago.find({idTipoPago:tipoPagoId},(err, pagos) => {
@@ -77,7 +77,7 @@ function getPagosTipoPago(req, res){
     }).sort('_id').populate([{path:'idTipoPago'},{path:'idUsuario'}]);
 }
 
-//get actividades con id congreso
+//get pagos con id congreso
 function getPagosCongreso(req, res){
     var congresoId = req.params.id;
     Pago.find({idCongreso:congresoId},(err, pagos) => {
@@ -96,13 +96,13 @@ function updatePago(req,res){
     var pagoId = req.params.id;
     var update = req.body;
 
-    Pago.findByIdAndUpdate(actividadId, update, { new: true }, (err, actividadUpdated) => {
+    Pago.findByIdAndUpdate(pagoId, update, { new: true }, (err, pagoUpdated) => {
         if (err) return res.status(200).send({ message: 'Error en la peticion', success: false });
 
-        if (!actividadUpdated) return res.status(200).send({ message: 'No se ha podido actualizar', success: false });
+        if (!pagoUpdated) return res.status(200).send({ message: 'No se ha podido actualizar', success: false });
 
         return res.status(200).send({
-            message: "Se edito la actividad correctamente",
+            message: "Se edito el pago correctamente",
             success: true
         });
     });
