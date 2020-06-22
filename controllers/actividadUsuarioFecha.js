@@ -69,11 +69,12 @@ function getActividadesUsuario(req, res){
 
 //get actividadesUsuarioFecha por idActividad
 function getActividadesActividad(req, res){
-    var idActividad = req.params.id;
-    ActividadUsuarioFecha.find({idActividad:idActividad},(err, actividades) => {
-        if (err) return res.status(200).send({ message: 'Error en la peticion' ,success:false});
+    var actividadId = req.params.id;
+    ActividadUsuarioFecha.find({ idActividad: actividadId }, (err, actividades) => {
+        console.log(err);
+        if (err) return res.status(200).send({ message: 'Error en la peticion', success: false });
 
-        if (!actividades) return res.status(200).send({ message: 'No hay actividades disponibles' ,success:false});
+        if (!actividades) return res.status(200).send({ message: 'No hay congresos disponibles', success: false });
 
         return res.status(200).send({
             actividades

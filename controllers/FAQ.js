@@ -14,7 +14,7 @@ var md_auth = require('../middleware/authenticated');
 function newFAQ(req, res) {
     var params = req.body; //Toma todos los campos que llegan por req en body, y los pone en params
     var Faq = new FAQ();
-    if (params.idUsuario && params.comentario && params.respuesta && params.idCongreso) {
+    if (params.comentario && params.idCongreso) {
         //Seguir con el video jeje
         Faq.idUsuario = params.idUsuario;
         Faq.comentario = params.comentario;

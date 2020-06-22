@@ -8,5 +8,6 @@ var CarreraSchema = Schema({
     nombre: String,
     centro: String
 });
+//},{ shardKey: { _id : 1 }});
 
 module.exports = mongoose.model('Carrera',CarreraSchema,'carrera');

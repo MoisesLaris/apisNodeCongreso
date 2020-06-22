@@ -10,5 +10,6 @@ var pagoSquema = Schema({
     cantidad: Number,
     status: Boolean
 });
+//},{ shardKey: { _id : 1 }});
 
 module.exports = mongoose.model('Pago', pagoSquema, "pago");

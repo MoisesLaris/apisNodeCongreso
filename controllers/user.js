@@ -40,7 +40,7 @@ function newUser(req, res) {
 
         user.nombre = params.nombre;
         user.apellidos = params.apellidos;
-        user.tipoUsuario = 1;
+        user.tipoUsuario = 0;//cambiar a 1
         user.correo = params.correo.toLowerCase();
         user.semestre = params.semestre;
         user.grupo = params.grupo;
@@ -62,8 +62,9 @@ function newUser(req, res) {
                         if (err) {
                             res.status(200).send({ message: 'No se ha registrado el usuario', success: false });
                         }
-                        var x = doc[0].idUsuario + 1;
-                        user.idUsuario = x;
+                        //var x = doc[0].idUsuario + 1;
+                        user.idUsuario = 0;
+                        //user.tipoUsuario = 0;//Quitar en el front
                         user.save((err, userStored) => {
                             if (err) {
                                 return res.status(200).send({ message: 'Error al insertar el usuario ' + err, success: false })
@@ -293,9 +294,10 @@ function deleteUser(req, res) {
         return res.status(200).send({ message: 'No tienes permisos para esto', success: false });
     }
 
-    User.deleteOne(usuario, err => {
-        if (err) return res.status(200).send({ message: 'Error al eliminar usuario', success: false });
-        return res.status(200).send({ message: 'Usuario Eliminado', success: true });
+    User.deleteOne({ _id: usuario }, err => {
+        if (err) return res.status(200).send({ message: 'Error al eliminar el usuario', success: false });
+
+        return res.status(200).send({ message: 'Usuario Eliminada', success: true });
     });
 }
 

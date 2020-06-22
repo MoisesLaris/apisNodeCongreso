@@ -10,5 +10,6 @@ var congresoSquema = Schema({
     fechaInicio : Date,
     fechaFin : Date
 });
+//},{ shardKey: { _id : 1 }});
 
 module.exports = mongoose.model('Congreso', congresoSquema, "congreso");
