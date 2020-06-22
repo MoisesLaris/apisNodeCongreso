@@ -16,50 +16,50 @@ function newActividadUsuarioFecha(req, res) {
         actividadUsuarioFecha.fecha = params.fecha;
         actividadUsuarioFecha.idActividad = params.idActividad;
 
-        ActividadUsuarioFecha.find({idUsuario:actividadUsuarioFecha.idUsuario,idFecha:actividadUsuarioFecha.idFecha,horario:actividadUsuarioFecha.horario}).sort({ $natural: -1 }).exec(function(err, doc) {
+        ActividadUsuarioFecha.find({ idUsuario: actividadUsuarioFecha.idUsuario, idFecha: actividadUsuarioFecha.idFecha, horario: actividadUsuarioFecha.horario }).sort({ $natural: -1 }).exec(function(err, doc) {
             if (err) {
-                res.status(200).send({ message: 'No se ha registrado la actividad' ,success:false});
+                res.status(200).send({ message: 'No se ha registrado la actividad', success: false });
             }
             actividadUsuarioFecha.idActividadUsuarioFecha = 0;
             actividadUsuarioFecha.save((err, actividadStored) => {
                 if (err) {
-                    return res.status(200).send({ message: 'Error al insertar la actividad ', success:true })
+                    return res.status(200).send({ message: 'Error al insertar la actividad ', success: true })
                 }
                 if (actividadStored) {
-                    res.status(200).send({ message: 'Se ha registrado la actividad' ,success:true});
+                    res.status(200).send({ message: 'Se ha registrado la actividad', success: true });
                 } else {
-                    res.status(200).send({ message: 'No se ha registrado la actividad' ,success:false});
+                    res.status(200).send({ message: 'No se ha registrado la actividad', success: false });
                 }
             });
         });
     } else {
         res.status(200).send({
-            message: "Hubo un problema al recibir los datos."
-            ,success:false
+            message: "Hubo un problema al recibir los datos.",
+            success: false
         });
     }
 }
 
 //get Actividad por id ActividadUsuarioFecha
-function getActividadUsuarioFecha(req,res) {
+function getActividadUsuarioFecha(req, res) {
     var actividadId = req.params.id;
 
     ActividadUsuarioFecha.findById(actividadId, (err, actividad) => {
-        if (err) return res.status(200).send({ message: 'Error en la peticion' ,success:false});
+        if (err) return res.status(200).send({ message: 'Error en la peticion', success: false });
 
-        if (!actividad) return res.status(200).send({ message: 'La actividad no existe' ,success:false});
+        if (!actividad) return res.status(200).send({ message: 'La actividad no existe', success: false });
 
         return res.status(200).send({ actividad });
     });
 }
 
 //get actividadesUsuarioFecha por idUsuario
-function getActividadesUsuario(req, res){
+function getActividadesUsuario(req, res) {
     var idUsuario = req.params.id;
-    ActividadUsuarioFecha.find({idUsuario:idUsuario},(err, actividades) => {
-        if (err) return res.status(200).send({ message: 'Error en la peticion' ,success:false});
+    ActividadUsuarioFecha.find({ idUsuario: idUsuario }, (err, actividades) => {
+        if (err) return res.status(200).send({ message: 'Error en la peticion', success: false });
 
-        if (!actividades) return res.status(200).send({ message: 'No hay actividades disponibles' ,success:false});
+        if (!actividades) return res.status(200).send({ message: 'No hay actividades disponibles', success: false });
 
         return res.status(200).send({
             actividades
@@ -68,10 +68,9 @@ function getActividadesUsuario(req, res){
 }
 
 //get actividadesUsuarioFecha por idActividad
-function getActividadesActividad(req, res){
+function getActividadesActividad(req, res) {
     var actividadId = req.params.id;
     ActividadUsuarioFecha.find({ idActividad: actividadId }, (err, actividades) => {
-        console.log(err);
         if (err) return res.status(200).send({ message: 'Error en la peticion', success: false });
 
         if (!actividades) return res.status(200).send({ message: 'No hay congresos disponibles', success: false });
@@ -83,12 +82,12 @@ function getActividadesActividad(req, res){
 }
 
 //get actividadesUsuarioFecha por idFecha
-function getActividadesFecha(req, res){
+function getActividadesFecha(req, res) {
     var idFecha = req.params.id;
-    ActividadUsuarioFecha.find({idFecha:idFecha},(err, actividades) => {
-        if (err) return res.status(200).send({ message: 'Error en la peticion' ,success:false});
+    ActividadUsuarioFecha.find({ idFecha: idFecha }, (err, actividades) => {
+        if (err) return res.status(200).send({ message: 'Error en la peticion', success: false });
 
-        if (!actividades) return res.status(200).send({ message: 'No hay actividades disponibles' ,success:false});
+        if (!actividades) return res.status(200).send({ message: 'No hay actividades disponibles', success: false });
 
         return res.status(200).send({
             actividades
@@ -96,12 +95,12 @@ function getActividadesFecha(req, res){
     }).sort('_id');
 }
 
-function getActividadesUsuarioCero(req,res){
+function getActividadesUsuarioCero(req, res) {
     var id = req.params.id;
-    ActividadUsuarioFecha.find({idUsuario:0},(err, actividades) => {
-        if(err) return res.status(200).send({message:'Error en la peticion',success:false});
+    ActividadUsuarioFecha.find({ idUsuario: 0 }, (err, actividades) => {
+        if (err) return res.status(200).send({ message: 'Error en la peticion', success: false });
 
-        if(!actividades) return res.status(200).send({message:'No hay actividades disponibles',success:false});
+        if (!actividades) return res.status(200).send({ message: 'No hay actividades disponibles', success: false });
 
         return res.status(200).send({
             actividades
@@ -110,7 +109,7 @@ function getActividadesUsuarioCero(req,res){
 }
 
 //Actualizar Actividad
-function updateActividadUsuarioFecha(req,res){
+function updateActividadUsuarioFecha(req, res) {
     var actividadId = req.params.id;
     var update = req.body;
 
