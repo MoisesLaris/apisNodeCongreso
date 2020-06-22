@@ -9,7 +9,7 @@ var pagoSquema = Schema({
     idTipoPago: { type: Schema.ObjectId, ref: 'TipoPago'},
     cantidad: Number,
     status: Boolean
-});
-//},{ shardKey: { _id : 1 }});
+//});
+},{ shardKey: { _id : 1 }});
 
 module.exports = mongoose.model('Pago', pagoSquema, "pago");

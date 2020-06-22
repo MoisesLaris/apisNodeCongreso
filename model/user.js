@@ -13,7 +13,7 @@ var userSquema = Schema({
     semestre: Number,
     grupo: String,
     idCarrera: { type: Schema.ObjectId, ref: 'Carrera' }
-});
-//},{ shardKey: { _id : 1 }});
+//});
+},{ shardKey: { _id : 1 }});
 
 module.exports = mongoose.model('User', userSquema, "usuario");

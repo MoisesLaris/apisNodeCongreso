@@ -9,7 +9,7 @@ var FAQSquema = Schema({
     comentario: String,
     respuesta: String,
     idCongreso: { type: Schema.ObjectId, ref : 'Congreso'}
-});
-//},{ shardKey: { _id : 1 }});
+//});
+},{ shardKey: { _id : 1 }});
 
 module.exports = mongoose.model('FAQ', FAQSquema, "faq");

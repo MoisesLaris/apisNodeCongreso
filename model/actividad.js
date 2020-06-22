@@ -10,7 +10,7 @@ var actividadSchema = Schema({
     descripcion: String,
     fechas : [],
     color: String
-});
-//},{ shardKey: { _id : 1 }});
+//});
+},{ shardKey: { _id : 1 }});
 
 module.exports = mongoose.model('Actividad',actividadSchema,'actividad');

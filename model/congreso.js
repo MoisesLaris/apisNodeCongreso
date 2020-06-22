@@ -9,7 +9,7 @@ var congresoSquema = Schema({
     idCarrera: { type: Schema.ObjectId, ref: 'Carrera'},
     fechaInicio : Date,
     fechaFin : Date
-});
-//},{ shardKey: { _id : 1 }});
+//});
+},{ shardKey: { _id : 1 }});
 
 module.exports = mongoose.model('Congreso', congresoSquema, "congreso");

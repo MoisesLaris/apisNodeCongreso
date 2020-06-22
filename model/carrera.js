@@ -7,7 +7,7 @@ var CarreraSchema = Schema({
     idCarrera: Number,
     nombre: String,
     centro: String
-});
-//},{ shardKey: { _id : 1 }});
+//});
+},{ shardKey: { _id : 1 }});
 
 module.exports = mongoose.model('Carrera',CarreraSchema,'carrera');
